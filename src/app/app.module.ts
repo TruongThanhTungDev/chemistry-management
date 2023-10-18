@@ -17,11 +17,21 @@ import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { AddEditChemistryComponent } from './shared/popup/add-edit-chemistry/add-edit-chemistry.component';
+import { BasicInformationChemistry } from './shared/popup/add-edit-chemistry/basic-infomation-chemistry/basic-infomation-chemistry.component';
+import { OtherInformationChemistry } from './shared/popup/add-edit-chemistry/other-information-chemistry/other-information-chemistry.component';
 
 
 @NgModule({
-  declarations: [AppComponent, LayoutComponent, LoginComponent, AddEditChemistryComponent],
+  declarations: [
+    AppComponent,
+    LayoutComponent,
+    LoginComponent,
+    AddEditChemistryComponent,
+    BasicInformationChemistry,
+    OtherInformationChemistry
+  ],
   imports: [
     FormsModule,
     BrowserModule,
@@ -35,6 +45,7 @@ import { AddEditChemistryComponent } from './shared/popup/add-edit-chemistry/add
     NzNotificationModule,
     NzSpinModule,
     BrowserAnimationsModule,
+    NzDropDownModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HeadersInterceptor, multi: true },

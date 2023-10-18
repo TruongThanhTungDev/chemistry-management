@@ -1,0 +1,96 @@
+<div class="grid grid-cols-2 gap-4">
+  <div>
+    <div class="relative">
+      <label for="upload-file" class="cursor-pointer">
+        <div class="w-518px py-200px text-center border-branch border border-dashed">
+          <i class="fa-solid fa-camera text-branch text-56px"></i>
+        </div>
+      </label>
+      <input type="file" class="opacity-0 absolute top-0" id="upload-file" />
+      <div class="text-center font-bold">Hình ảnh chất hóa học</div>
+    </div>
+  </div>
+  <div>
+    <div class="mb-5">
+      <div class="text-branch font-bold">
+        <i class="fa-solid fa-flask mr-1"></i>
+        Mã chất
+      </div>
+      <input type="text" nz-input class="w-full custom-input">
+    </div>
+    <div class="mb-5">
+      <div class="text-branch font-bold">
+        <i class="fa-solid fa-vial mr-1"></i>
+        Tên chất hóa học
+      </div>
+      <input type="text" nz-input class="w-full custom-input">
+    </div>
+    <div class="mb-5">
+      <div class="text-branch font-bold">
+        <i class="fa-solid fa-vial mr-1"></i>
+        Loại chất
+      </div>
+      <input type="text" nz-input class="w-full custom-input">
+    </div>
+    <div class="mb-5">
+      <div class="text-branch font-bold">
+        <i class="fa-solid fa-book mr-1"></i>
+        Danh pháp
+      </div>
+      <input type="text" nz-input class="w-full custom-input">
+    </div>
+    <div class="mb-5 grid grid-cols-2 gap-6">
+      <div>
+        <div class="text-branch font-bold">
+          <i class="fa-solid fa-hashtag mr-1"></i>
+          Số lượng
+        </div>
+        <input type="text" nz-input class="w-full custom-input">
+      </div>
+      <div>
+        <div class="text-branch font-bold">
+          <i class="fa-solid fa-calendar mr-1"></i>
+          Hạn sử dụng
+        </div>
+        <input type="text" nz-input class="w-full custom-input">
+      </div>
+    </div>
+    <div class="mb-5 grid grid-cols-2 gap-6">
+      <div>
+        <div class="text-branch font-bold">
+          <i class="fa-solid fa-hashtag mr-1"></i>
+          Tình trạng lưu trữ
+        </div>
+        <div class="text-center mt-3">
+          <button nz-dropdown [nzDropdownMenu]="menu1" class="bg-blue-600 text-white py-1 px-60px border rounded-lg" nzTrigger="click">
+            Còn
+          </button>
+        </div>
+        <nz-dropdown-menu #menu1="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item>Còn</li>
+            <li nz-menu-item>Hết</li>
+          </ul>
+        </nz-dropdown-menu>
+      </div>
+      <div>
+        <div class="text-branch font-bold">
+          <i class="fa-solid fa-calendar mr-1"></i>
+          Tình trạng sử dụng
+        </div>
+        <div class="text-center mt-3">
+          <button nz-dropdown [nzDropdownMenu]="menu1" class="bg-blue-600 text-white py-1 px-60px border rounded-lg"
+            nzTrigger="click">
+            Chưa hết hạn
+          </button>
+        </div>
+        <nz-dropdown-menu #menu2="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item>Chưa hết hạn</li>
+            <li nz-menu-item>Hết hạn</li>
+          </ul>
+        </nz-dropdown-menu>
+      </div>
+    </div>
+  </div>
+</div>

@@ -38,28 +38,20 @@
     </div>
     <div class="container-main">
       <nz-table #tableChemistry [nzData]="listChemistry" nzNoResult="Không có dữ liệu" nzTableLayout="fixed"
-        [nzScroll]="{ x: '1100px', y: 'auto'}">
+        [nzScroll]="{ x: '1200px', y: 'auto'}">
         <thead>
           <tr>
-            <th>Mã chất</th>
-            <th>Tên Hóa học</th>
-            <th>Danh pháp</th>
-            <th>Ký hiệu</th>
-            <th>Số lượng</th>
-            <th>Hạn sử dụng</th>
-            <th class="w-200px">Tình trạng lưu trữ</th>
-            <th class="w-200px">Tình trạng sử dụng</th>
+            <th class="min-w-200px">Mã chất</th>
+            <th class="min-w-200px">Tên Hóa học</th>
+            <th class="min-w-200px">Danh pháp</th>
+            <th class="min-w-200px">Ký hiệu</th>
+            <th class="min-w-200px">Hạn sử dụng</th>
+            <th class="min-w-250px">Tình trạng lưu trữ</th>
+            <th class="min-w-250px">Tình trạng sử dụng</th>
           </tr>
         </thead>
-        <tbody *ngFor="let data of tableChemistry.data">
-          <tr>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
+        <tbody>
+          <tr *ngFor="let item of tableChemistry.data">
           </tr>
         </tbody>
       </nz-table>

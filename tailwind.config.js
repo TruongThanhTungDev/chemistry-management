@@ -10,6 +10,9 @@ module.exports = {
       backgroundColor: {
         branch: "#20712D",
       },
+      borderColor: {
+        branch: "#20712D",
+      },
       fontSize: {
         "14px": "14px",
         "16px": "16px",
@@ -35,18 +38,38 @@ module.exports = {
         "80px": "80px",
         "100px": "100px",
         "120px": "120px",
+        "300px": "300px",
+        "500px": "500px",
+        "518px": "518px",
       },
       width: {
         30: "30%",
         70: "70%",
         75: "75%",
-        '150px': '150px',
-        '200px': '200px'
+        "150px": "150px",
+        "200px": "200px",
+        "300px": "300px",
+        "500px": "500px",
+        "518px": "518px",
+      },
+      minWidth: {
+        30: "30%",
+        70: "70%",
+        75: "75%",
+        "150px": "150px",
+        "200px": "200px",
+        "250px": "250px",
       },
       margin: {
         11: "44px",
         12: "48px",
         13: "52px",
+      },
+      padding: {
+        "40px": "40px",
+        "60px": "60px",
+        "200px": "200px",
+        "230px": "230px",
       },
       borderColor: {
         branch: "#20712D",

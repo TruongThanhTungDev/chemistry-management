@@ -63,6 +63,12 @@ export class ChemistryManagement implements OnInit {
       nzTitle: 'Thêm mới chất hóa học',
       nzContent: AddEditChemistryComponent,
       nzViewContainerRef: this.viewContainerRef,
+      nzWidth: '1100px',
+      nzBodyStyle: {
+        height: '570px',
+        overflowY: 'auto'
+      },
+      nzCentered: true,
       nzData: {
         favoriteLibrary: 'angular',
         favoriteFramework: 'angular'
