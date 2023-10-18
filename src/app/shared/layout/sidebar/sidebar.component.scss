@@ -1,0 +1,14 @@
+.sidebar-container {
+  width: 320px;
+  height: 100%;
+  background-color: white;
+}
+.active-menu::after {
+  content: '';
+  position: absolute;
+  background-color: #20712D;
+  width: 8px;
+  height: 30px;
+  right: 0;
+  transition: all;
+}

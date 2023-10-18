@@ -1,0 +1,56 @@
+@import './spacing.scss';
+@import url("https://fonts.googleapis.com/css?family=Montserrat:500,700");
+
+body {
+  font-size: 16px!important;
+  font-family: 'Montserrat'!important;
+  height: 100vh!important;
+  background-color: #f7f8fa!important;
+}
+.active::after {
+  content: '';
+  position: absolute;
+  background-color: #20712D;
+  width: 8px;
+  height: 30px;
+  right: 0;
+  transition: all;
+}
+.active {
+  color: #20712D;
+}
+// input custom 
+.ant-input-focused, .ant-input:focus {
+  border-color: #20712D!important;
+  box-shadow: 0 0 0 2px rgba(24, 255, 55, 0.2);
+}
+.ant-input:hover {
+  border-color: #20712D!important;
+}
+.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
+  border-color: #20712D!important;
+}
+.ant-input-affix-wrapper-focused {
+ border-color: #20712D!important;
+  box-shadow: 0 0 0 2px rgba(24, 255, 55, 0.2);
+}
+
+// custom table 
+
+// custom button 
+.ant-btn:focus {
+  .btn-success {
+    color: #20712D!important;
+    border-color: #20712D!important;
+  }
+}
+.ant-btn:hover {
+  .btn-success {
+    color: #20712D!important;
+    border-color: #20712D!important;
+  }
+}
+.btn-success {
+  background-color: #20712D!important;
+  color: white!important;
+}

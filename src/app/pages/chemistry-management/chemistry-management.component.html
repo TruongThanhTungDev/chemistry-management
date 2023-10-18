@@ -1,0 +1,71 @@
+<div>
+  <nz-spin [nzSpinning]="isLoading">
+    <div class="grid grid-cols-2 gap-2 items-center mb-3">
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <nz-input-group [nzPrefix]="suffixIconSearch">
+            <input type="text" nz-input placeholder="Tìm kiếm theo tên" />
+          </nz-input-group>
+          <ng-template #suffixIconSearch>
+            <span nz-icon nzType="search"></span>
+          </ng-template>
+        </div>
+        <div>
+          <button nz-button nzType="primary">
+            <i class="fa-solid fa-barcode mr-1"></i>
+            Quét
+          </button>
+        </div>
+      </div>
+      <div class="flex items-center justify-end">
+        <div class="mr-2">
+          <button nz-button nz-dropdown [nzDropdownMenu]="menu" class="btn-success">
+            <i class="fa-solid fa-plus mr-1"></i>
+            Thêm
+          </button>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item>Thêm mới</li>
+              <li nz-menu-item>Thêm nhiều</li>
+            </ul>
+          </nz-dropdown-menu>
+        </div>
+        <button nz-button nzType="primary" nzDanger="">
+          <i class="fa-solid fa-trash mr-1"></i>
+          Xóa
+        </button>
+      </div>
+    </div>
+    <div class="container-main">
+      <nz-table #tableChemistry [nzData]="listChemistry" nzNoResult="Không có dữ liệu" nzTableLayout="fixed"
+        [nzScroll]="{ x: '1100px', y: 'auto'}">
+        <thead>
+          <tr>
+            <th>Mã chất</th>
+            <th>Tên Hóa học</th>
+            <th>Danh pháp</th>
+            <th>Ký hiệu</th>
+            <th>Số lượng</th>
+            <th>Hạn sử dụng</th>
+            <th class="w-200px">Tình trạng lưu trữ</th>
+            <th>Tình trạng sử dụng</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let data of tableChemistry.data">
+          <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+    <div class="text-end">
+      <nz-pagination [nzPageIndex]="page" [nzTotal]="totalItems"></nz-pagination>
+    </div>
+  </nz-spin>
+</div>

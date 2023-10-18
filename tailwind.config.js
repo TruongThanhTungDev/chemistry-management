@@ -2,7 +2,56 @@
 module.exports = {
   content: ["./src/**/*.{html,ts}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        white: "#FFFFFF",
+        branch: "#20712D",
+      },
+      backgroundColor: {
+        branch: "#20712D",
+      },
+      fontSize: {
+        "14px": "14px",
+        "16px": "16px",
+        "20px": "20px",
+        "24px": "24px",
+        "36px": "36px",
+        "40px": "40px",
+        "56px": "56px",
+        "64px": "64px",
+        "72px": "72px",
+        "80px": "80px",
+        "96px": "96px",
+      },
+      fontWeight: {
+        200: 200,
+        300: 300,
+        400: 400,
+        500: 500,
+        600: 600,
+        700: 700,
+      },
+      height: {
+        "80px": "80px",
+        "100px": "100px",
+        "120px": "120px",
+      },
+      width: {
+        30: "30%",
+        70: "70%",
+        75: "75%",
+        '150px': '150px',
+        '200px': '200px'
+      },
+      margin: {
+        11: "44px",
+        12: "48px",
+        13: "52px",
+      },
+      borderColor: {
+        branch: "#20712D",
+      },
+    },
   },
   plugins: [],
 };

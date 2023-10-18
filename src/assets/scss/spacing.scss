@@ -1,0 +1,6 @@
+$font-sizes: 10, 12, 14, 16, 18, 20, 24, 30, 32, 36, 50;
+@each $size in $font-sizes {
+  .fz-#{$size} {
+    font-size: #{$size}px !important;
+  }
+}
