@@ -25,7 +25,7 @@
           </button>
           <nz-dropdown-menu #menu="nzDropdownMenu">
             <ul nz-menu>
-              <li nz-menu-item>Thêm mới</li>
+              <li nz-menu-item (click)="openAddChemistryModal()">Thêm mới</li>
               <li nz-menu-item>Thêm nhiều</li>
             </ul>
           </nz-dropdown-menu>
@@ -48,7 +48,7 @@
             <th>Số lượng</th>
             <th>Hạn sử dụng</th>
             <th class="w-200px">Tình trạng lưu trữ</th>
-            <th>Tình trạng sử dụng</th>
+            <th class="w-200px">Tình trạng sử dụng</th>
           </tr>
         </thead>
         <tbody *ngFor="let data of tableChemistry.data">

@@ -1,6 +1,8 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { ApiServices } from 'src/app/api.services';
+import { AddEditChemistryComponent } from 'src/app/shared/popup/add-edit-chemistry/add-edit-chemistry.component';
 import { NotificationService } from 'src/app/shared/utils/toast.service';
 
 @Component({
@@ -17,7 +19,9 @@ export class ChemistryManagement implements OnInit {
   totalItems = 0;
   constructor(
     private service: ApiServices,
-    private notify: NotificationService
+    private notify: NotificationService,
+    private modal: NzModalService,
+    private viewContainerRef: ViewContainerRef
   ) {}
 
   ngOnInit(): void {
@@ -53,5 +57,23 @@ export class ChemistryManagement implements OnInit {
     const filter = [];
     filter.push('id>0');
     return filter.join(';');
+  }
+  openAddChemistryModal() {
+    this.modal.create({
+      nzTitle: 'Thêm mới chất hóa học',
+      nzContent: AddEditChemistryComponent,
+      nzViewContainerRef: this.viewContainerRef,
+      nzData: {
+        favoriteLibrary: 'angular',
+        favoriteFramework: 'angular'
+      },
+      nzOkText: 'Lưu',
+      nzCancelText: 'Hủy',
+      nzOkType: 'primary',
+      nzOnOk: () => {
+        this.page = 1
+        this.getDataChemistry()
+      }
+    })
   }
 }

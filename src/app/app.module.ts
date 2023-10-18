@@ -16,9 +16,12 @@ import { FormsModule } from '@angular/forms';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { AddEditChemistryComponent } from './shared/popup/add-edit-chemistry/add-edit-chemistry.component';
+
 
 @NgModule({
-  declarations: [AppComponent, LayoutComponent, LoginComponent],
+  declarations: [AppComponent, LayoutComponent, LoginComponent, AddEditChemistryComponent],
   imports: [
     FormsModule,
     BrowserModule,
@@ -27,6 +30,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     HeaderModule,
     SidebarModule,
     NzInputModule,
+    NzModalModule,
     HttpClientModule,
     NzNotificationModule,
     NzSpinModule,
