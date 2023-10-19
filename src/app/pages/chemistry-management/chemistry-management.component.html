@@ -11,7 +11,7 @@
           </ng-template>
         </div>
         <div>
-          <button nz-button nzType="primary">
+          <button nz-button nzType="primary" (click)="openBarcodeScannerModal()">
             <i class="fa-solid fa-barcode mr-1"></i>
             Quét
           </button>
@@ -26,7 +26,7 @@
           <nz-dropdown-menu #menu="nzDropdownMenu">
             <ul nz-menu>
               <li nz-menu-item (click)="openAddChemistryModal()">Thêm mới</li>
-              <li nz-menu-item>Thêm nhiều</li>
+              <li nz-menu-item (click)="openMultipleAddModal()">Thêm nhiều</li>
             </ul>
           </nz-dropdown-menu>
         </div>

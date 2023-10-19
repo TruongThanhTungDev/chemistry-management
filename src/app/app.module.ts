@@ -21,7 +21,9 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { AddEditChemistryComponent } from './shared/popup/add-edit-chemistry/add-edit-chemistry.component';
 import { BasicInformationChemistry } from './shared/popup/add-edit-chemistry/basic-infomation-chemistry/basic-infomation-chemistry.component';
 import { OtherInformationChemistry } from './shared/popup/add-edit-chemistry/other-information-chemistry/other-information-chemistry.component';
-
+import { AngularEditorModule } from '@kolkov/angular-editor';
+import { BarcodeScanner } from './shared/popup/barcode-scanner/barcode-scanner.component';
+import { AddMultipleChemistryModal } from './shared/popup/add-multiple-chemistry/add-multiple-chemistry.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { OtherInformationChemistry } from './shared/popup/add-edit-chemistry/oth
     LoginComponent,
     AddEditChemistryComponent,
     BasicInformationChemistry,
-    OtherInformationChemistry
+    OtherInformationChemistry,
+    BarcodeScanner,
+    AddMultipleChemistryModal,
   ],
   imports: [
     FormsModule,
@@ -46,6 +50,7 @@ import { OtherInformationChemistry } from './shared/popup/add-edit-chemistry/oth
     NzSpinModule,
     BrowserAnimationsModule,
     NzDropDownModule,
+    AngularEditorModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HeadersInterceptor, multi: true },

@@ -3,6 +3,8 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ApiServices } from 'src/app/api.services';
 import { AddEditChemistryComponent } from 'src/app/shared/popup/add-edit-chemistry/add-edit-chemistry.component';
+import { AddMultipleChemistryModal } from 'src/app/shared/popup/add-multiple-chemistry/add-multiple-chemistry.component';
+import { BarcodeScanner } from 'src/app/shared/popup/barcode-scanner/barcode-scanner.component';
 import { NotificationService } from 'src/app/shared/utils/toast.service';
 
 @Component({
@@ -25,7 +27,7 @@ export class ChemistryManagement implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getDataChemistry()
+    this.getDataChemistry();
   }
   getDataChemistry() {
     const payload = {
@@ -35,21 +37,20 @@ export class ChemistryManagement implements OnInit {
       sort: ['id', 'desc'],
     };
     this.isLoading = true;
-    this.service
-      .getOption(this.REQUEST_URL, payload, '/search')
-      .subscribe((res: HttpResponse<any>) => {
+    this.service.getOption(this.REQUEST_URL, payload, '/search').subscribe(
+      (res: HttpResponse<any>) => {
         if (res.body.CODE === 200) {
           this.isLoading = false;
           // this.listChemistry = res.body.RESULT.content;
         } else {
-          this.isLoading = false
-          this.notify.error('Lỗi', 'Lấy danh sách thất bại')
+          this.isLoading = false;
+          this.notify.error('Lỗi', 'Lấy danh sách thất bại');
         }
       },
-        () => {
-          this.isLoading = false;
-          console.error()
-          this.notify.error('Lỗi', 'Lấy danh sách thất bại');
+      () => {
+        this.isLoading = false;
+        console.error();
+        this.notify.error('Lỗi', 'Lấy danh sách thất bại');
       }
     );
   }
@@ -66,20 +67,57 @@ export class ChemistryManagement implements OnInit {
       nzWidth: '1100px',
       nzBodyStyle: {
         height: '570px',
-        overflowY: 'auto'
+        overflowY: 'auto',
       },
       nzCentered: true,
       nzData: {
         favoriteLibrary: 'angular',
-        favoriteFramework: 'angular'
+        favoriteFramework: 'angular',
       },
       nzOkText: 'Lưu',
       nzCancelText: 'Hủy',
       nzOkType: 'primary',
       nzOnOk: () => {
-        this.page = 1
-        this.getDataChemistry()
-      }
-    })
+        this.page = 1;
+        this.getDataChemistry();
+      },
+    });
+  }
+  openBarcodeScannerModal() {
+    this.modal.create({
+      nzTitle: 'Quét mã Barcode',
+      nzContent: BarcodeScanner,
+      nzViewContainerRef: this.viewContainerRef,
+      nzCentered: true,
+      nzData: {
+        favoriteLibrary: 'angular',
+        favoriteFramework: 'angular',
+      },
+      nzFooter: null,
+    });
+  }
+  openMultipleAddModal() {
+     this.modal.create({
+       nzTitle: 'Thêm mới nhiều Chất hóa học',
+       nzContent: AddMultipleChemistryModal,
+       nzViewContainerRef: this.viewContainerRef,
+       nzWidth: '1100px',
+       nzBodyStyle: {
+         height: '570px',
+         overflowY: 'auto',
+       },
+       nzCentered: true,
+       nzData: {
+         favoriteLibrary: 'angular',
+         favoriteFramework: 'angular',
+       },
+       nzOkText: 'Lưu',
+       nzCancelText: 'Hủy',
+       nzOkType: 'primary',
+       nzOnOk: () => {
+         this.page = 1;
+         this.getDataChemistry();
+       },
+     });
   }
 }
