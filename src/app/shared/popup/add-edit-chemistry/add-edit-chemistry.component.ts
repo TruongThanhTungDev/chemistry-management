@@ -6,6 +6,7 @@ import { ApiServices } from 'src/app/api.services';
 import * as moment from 'moment';
 import { OPERATIONS } from 'src/app/app.constants';
 import { HttpResponse } from '@angular/common/http';
+import { OtherInformationChemistry } from './other-information-chemistry/other-information-chemistry.component';
 
 @Component({
   selector: 'add-edit-chemistry',
@@ -14,6 +15,7 @@ import { HttpResponse } from '@angular/common/http';
 })
 export class AddEditChemistryComponent {
   @ViewChild('basicInfo') basicInfo!: BasicInformationChemistry;
+  @ViewChild('otherInfo') otherInfo!: OtherInformationChemistry
 
   @Input() title?: string;
 
@@ -40,28 +42,33 @@ export class AddEditChemistryComponent {
             'YYYYMMDD'
           )
         ),
+        ...this.otherInfo.otherInfo
       };
-      this.isLoading = true
-      this.service.postOption(this.REQUEST_URL, payload, OPERATIONS.CREATE).subscribe(
-        (res: HttpResponse<any>) => {
-          if (res.body.CODE === 200) {
+      this.isLoading = true;
+      this.service
+        .postOption(this.REQUEST_URL, payload, OPERATIONS.CREATE)
+        .subscribe(
+          (res: HttpResponse<any>) => {
+            if (res.body.CODE === 200) {
+              this.isLoading = false;
+              this.notify.success(
+                'Thông báo',
+                'Thêm mới chất hóa học thành công'
+              );
+              resolve(res);
+            } else {
+              this.isLoading = false;
+              this.notify.error('Lỗi', res.body.MESSAGE);
+              reject(res);
+            }
+          },
+          (err) => {
+            reject(err);
             this.isLoading = false;
-            this.notify.success('Thông báo', 'Thêm mới chất hóa học thành công')
-            resolve(res)
-          } else {
-            this.isLoading = false;
-            this.notify.error('Lỗi', res.body.MESSAGE)
-            reject(res)
+            console.error();
+            this.notify.error('Lỗi', 'Có lỗi xảy ra, vui lòng thử lại');
           }
-        },
-        (err) => {
-          reject(err)
-          this.isLoading = false
-          console.error()
-          this.notify.error('Lỗi', 'Có lỗi xảy ra, vui lòng thử lại');
-        }
-      )
-    }
-    );
+        );
+    });
   }
 }
