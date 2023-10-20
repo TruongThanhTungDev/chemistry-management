@@ -6,6 +6,12 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
   styleUrls: ['./other-information-chemistry.component.scss'],
 })
 export class OtherInformationChemistry implements OnInit, AfterViewInit {
+  otherInfo = {
+    physicalProperties: '',
+    numberOfMoles: '',
+    chemicalProperties: '',
+    bondStructure: ''
+  };
   editorConfig: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
@@ -42,10 +48,6 @@ export class OtherInformationChemistry implements OnInit, AfterViewInit {
     toolbarPosition: 'top',
     toolbarHiddenButtons: [['bold', 'italic'], ['fontSize']],
   };
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
-  ngAfterViewInit(): void {
-    throw new Error('Method not implemented.');
-  }
+  ngOnInit(): void {}
+  ngAfterViewInit(): void {}
 }

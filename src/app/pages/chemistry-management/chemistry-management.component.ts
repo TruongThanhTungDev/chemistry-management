@@ -1,6 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnInit, ViewContainerRef } from '@angular/core';
-import { NzModalService } from 'ng-zorro-antd/modal';
+import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { ApiServices } from 'src/app/api.services';
 import { AddEditChemistryComponent } from 'src/app/shared/popup/add-edit-chemistry/add-edit-chemistry.component';
 import { AddMultipleChemistryModal } from 'src/app/shared/popup/add-multiple-chemistry/add-multiple-chemistry.component';
@@ -13,6 +13,7 @@ import { NotificationService } from 'src/app/shared/utils/toast.service';
   styleUrls: ['./chemistry-management.component.scss'],
 })
 export class ChemistryManagement implements OnInit {
+  @ViewChild('addModal') addModal!: AddEditChemistryComponent;
   REQUEST_URL = 'api/v1/Chemiscal';
   listChemistry: any[] = [];
   isLoading = false;
@@ -60,7 +61,7 @@ export class ChemistryManagement implements OnInit {
     return filter.join(';');
   }
   openAddChemistryModal() {
-    this.modal.create({
+    const modalRef: NzModalRef = this.modal.create({
       nzTitle: 'Thêm mới chất hóa học',
       nzContent: AddEditChemistryComponent,
       nzViewContainerRef: this.viewContainerRef,
@@ -74,13 +75,20 @@ export class ChemistryManagement implements OnInit {
         favoriteLibrary: 'angular',
         favoriteFramework: 'angular',
       },
-      nzOkText: 'Lưu',
-      nzCancelText: 'Hủy',
-      nzOkType: 'primary',
-      nzOnOk: () => {
-        this.page = 1;
-        this.getDataChemistry();
-      },
+      nzFooter: [
+        {
+          label: 'Hủy',
+          onClick: () => modalRef.destroy()
+        },
+        {
+          label: 'Lưu',
+          type: 'primary',
+          onClick: async () => {
+            const ref = modalRef.getContentComponent() as AddEditChemistryComponent
+            const res = await ref.saveInformation()
+          }
+        }
+      ]
     });
   }
   openBarcodeScannerModal() {
@@ -97,27 +105,27 @@ export class ChemistryManagement implements OnInit {
     });
   }
   openMultipleAddModal() {
-     this.modal.create({
-       nzTitle: 'Thêm mới nhiều Chất hóa học',
-       nzContent: AddMultipleChemistryModal,
-       nzViewContainerRef: this.viewContainerRef,
-       nzWidth: '1100px',
-       nzBodyStyle: {
-         height: '570px',
-         overflowY: 'auto',
-       },
-       nzCentered: true,
-       nzData: {
-         favoriteLibrary: 'angular',
-         favoriteFramework: 'angular',
-       },
-       nzOkText: 'Lưu',
-       nzCancelText: 'Hủy',
-       nzOkType: 'primary',
-       nzOnOk: () => {
-         this.page = 1;
-         this.getDataChemistry();
-       },
-     });
+    this.modal.create({
+      nzTitle: 'Thêm mới nhiều Chất hóa học',
+      nzContent: AddMultipleChemistryModal,
+      nzViewContainerRef: this.viewContainerRef,
+      nzWidth: '1100px',
+      nzBodyStyle: {
+        height: '570px',
+        overflowY: 'auto',
+      },
+      nzCentered: true,
+      nzData: {
+        favoriteLibrary: 'angular',
+        favoriteFramework: 'angular',
+      },
+      nzOkText: 'Lưu',
+      nzCancelText: 'Hủy',
+      nzOkType: 'primary',
+      nzOnOk: () => {
+        //  this.page = 1;
+        //  this.getDataChemistry();
+      },
+    });
   }
 }

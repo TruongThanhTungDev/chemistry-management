@@ -1,12 +1,13 @@
-<div class="grid grid-cols-2 gap-4">
+<form nz-form class="grid grid-cols-2 gap-4" [formGroup]="basicInformation">
   <div>
-    <div class="relative">
+    <div class="relative w-full h-400px">
       <label for="upload-file" class="cursor-pointer">
-        <div class="w-518px py-200px text-center border-branch border border-dashed">
+        <div *ngIf="!basicInformation.value.image" class="w-518px py-180px text-center border-branch border border-dashed">
           <i class="fa-solid fa-camera text-branch text-56px"></i>
         </div>
+        <img *ngIf="basicInformation.value.image" [src]="basicInformation.value.image" alt="Hình ảnh chất hóa học" class="w-full h-full" style="object-fit: cover;">
       </label>
-      <input type="file" class="opacity-0 absolute top-0" id="upload-file" />
+      <input type="file" accept="image/*" class="opacity-0 absolute top-0" id="upload-file" (change)="onImageSelected($event)"/>
       <div class="text-center font-bold">Hình ảnh chất hóa học</div>
     </div>
   </div>
@@ -16,46 +17,71 @@
         <i class="fa-solid fa-flask mr-1"></i>
         Mã chất
       </div>
-      <input type="text" nz-input class="w-full custom-input">
+      <input type="text" nz-input class="w-full custom-input" formControlName="code" />
     </div>
     <div class="mb-5">
-      <div class="text-branch font-bold">
-        <i class="fa-solid fa-vial mr-1"></i>
-        Tên chất hóa học
-      </div>
-      <input type="text" nz-input class="w-full custom-input">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Vui lòng nhập tên chất hóa học!">
+          <div class="text-branch font-bold">
+            <i class="fa-solid fa-vial mr-1"></i>
+            Tên chất hóa học
+          </div>
+          <input type="text" nz-input class="w-full custom-input" formControlName="name">
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Vui lòng nhập Ký hiệu hóa học!">
+          <div class="text-branch font-bold">
+            <i class="fa-solid fa-vial mr-1"></i>
+            Ký hiệu hóa học
+          </div>
+          <input type="text" nz-input class="w-full custom-input" formControlName="formula">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Vui lòng Loại chất!">
+          <div class="text-branch font-bold">
+            <i class="fa-solid fa-vial mr-1"></i>
+            Loại chất
+          </div>
+          <input type="text" nz-input class="w-full custom-input" formControlName="chemiscalType">
+        </nz-form-control>
+      </nz-form-item>
     </div>
     <div class="mb-5">
-      <div class="text-branch font-bold">
-        <i class="fa-solid fa-vial mr-1"></i>
-        Loại chất
-      </div>
-      <input type="text" nz-input class="w-full custom-input">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Vui lòng Danh pháp!">
+          <div class="text-branch font-bold">
+            <i class="fa-solid fa-book mr-1"></i>
+            Danh pháp
+          </div>
+          <input type="text" nz-input class="w-full custom-input" formControlName="nomenclature">
+        </nz-form-control>
+      </nz-form-item>
     </div>
-    <div class="mb-5">
-      <div class="text-branch font-bold">
-        <i class="fa-solid fa-book mr-1"></i>
-        Danh pháp
-      </div>
-      <input type="text" nz-input class="w-full custom-input">
+    <div class="grid grid-cols-2 gap-6">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Vui lòng nhập Số lượng!">
+          <div class="text-branch font-bold">
+            <i class="fa-solid fa-hashtag mr-1"></i>
+            Số lượng
+          </div>
+          <input type="text" nz-input class="w-full custom-input" formControlName="quantity">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Vui lòng nhập hạn sử dụng!">
+          <div class="text-branch font-bold">
+            <i class="fa-solid fa-calendar mr-1"></i>
+            Hạn sử dụng
+          </div>
+          <nz-date-picker formControlName="expirationDate" class="w-full custom-input" nzFormat="dd/MM/yyyy"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
     </div>
-    <div class="mb-5 grid grid-cols-2 gap-6">
-      <div>
-        <div class="text-branch font-bold">
-          <i class="fa-solid fa-hashtag mr-1"></i>
-          Số lượng
-        </div>
-        <input type="text" nz-input class="w-full custom-input">
-      </div>
-      <div>
-        <div class="text-branch font-bold">
-          <i class="fa-solid fa-calendar mr-1"></i>
-          Hạn sử dụng
-        </div>
-        <input type="text" nz-input class="w-full custom-input">
-      </div>
-    </div>
-    <div class="mb-5 grid grid-cols-2 gap-6">
+    <div class="grid grid-cols-2 gap-6">
       <div>
         <div class="text-branch font-bold">
           <i class="fa-solid fa-hashtag mr-1"></i>
@@ -93,4 +119,4 @@
       </div>
     </div>
   </div>
-</div>
+</form>

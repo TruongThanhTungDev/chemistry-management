@@ -22,9 +22,16 @@ import { AddEditChemistryComponent } from './shared/popup/add-edit-chemistry/add
 import { BasicInformationChemistry } from './shared/popup/add-edit-chemistry/basic-infomation-chemistry/basic-infomation-chemistry.component';
 import { OtherInformationChemistry } from './shared/popup/add-edit-chemistry/other-information-chemistry/other-information-chemistry.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import { NzFormModule } from 'ng-zorro-antd/form';
 import { BarcodeScanner } from './shared/popup/barcode-scanner/barcode-scanner.component';
 import { AddMultipleChemistryModal } from './shared/popup/add-multiple-chemistry/add-multiple-chemistry.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NZ_I18N, NzI18nModule, vi_VN } from 'ng-zorro-antd/i18n';
+import { registerLocaleData } from '@angular/common';
+import vi from '@angular/common/locales/vi'
 
+registerLocaleData(vi)
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,9 +58,14 @@ import { AddMultipleChemistryModal } from './shared/popup/add-multiple-chemistry
     BrowserAnimationsModule,
     NzDropDownModule,
     AngularEditorModule,
+    NzFormModule,
+    ReactiveFormsModule,
+    NzDatePickerModule,
+    NzI18nModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HeadersInterceptor, multi: true },
+    { provide: NZ_I18N, useValue: vi_VN },
   ],
   bootstrap: [AppComponent],
 })

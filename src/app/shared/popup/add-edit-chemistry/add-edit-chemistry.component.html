@@ -1,8 +1,10 @@
 <div>
-  <div class="mb-3">
-    <basic-infomation-chemistry></basic-infomation-chemistry>
-  </div>
-  <div class="mb-3">
-    <other-information-chemistry></other-information-chemistry>
-  </div>
+  <nz-spin [nzSpinning]="isLoading">
+    <div class="mb-5">
+      <basic-infomation-chemistry #basicInfo></basic-infomation-chemistry>
+    </div>
+    <div class="mb-3">
+      <other-information-chemistry #otherInfo></other-information-chemistry>
+    </div>
+  </nz-spin>
 </div>
