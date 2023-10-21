@@ -42,8 +42,11 @@ export class AddEditChemistryComponent {
             'YYYYMMDD'
           )
         ),
-        ...this.otherInfo.otherInfo
+        quantity: parseInt(this.basicInfo.basicInformation.value.quantity),
+        ...this.otherInfo.otherInfo,
+        numberOfMoles: parseFloat(this.otherInfo.otherInfo.numberOfMoles)
       };
+      console.log(payload)
       this.isLoading = true;
       this.service
         .postOption(this.REQUEST_URL, payload, OPERATIONS.CREATE)

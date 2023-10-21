@@ -10,7 +10,8 @@ export class OtherInformationChemistry implements OnInit, AfterViewInit {
     physicalProperties: '',
     numberOfMoles: '',
     chemicalProperties: '',
-    bondStructure: ''
+    bondStructure: '',
+    // naturalStatus: '',
   };
   editorConfig: AngularEditorConfig = {
     editable: true,
