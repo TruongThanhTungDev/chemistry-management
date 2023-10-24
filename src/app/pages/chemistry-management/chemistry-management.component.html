@@ -38,7 +38,7 @@
     </div>
     <div class="container-main">
       <nz-table #tableChemistry [nzData]="listChemistry" nzNoResult="Không có dữ liệu" nzTableLayout="fixed"
-        [nzScroll]="{ x: '1200px', y: 'auto'}">
+        [nzScroll]="{ x: '1200px', y: 'auto'}" [nzShowPagination]="false">
         <thead>
           <tr>
             <th class="min-w-200px">Mã chất</th>
@@ -51,7 +51,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of tableChemistry.data">
+          <tr *ngFor="let item of tableChemistry.data" (dblclick)="editChemistry(item)" (click)="selectRow(item)" [class]="rowSelected && item.id === rowSelected.id ? 'bg-branch' : ''">
+            <td></td>
+            <td>{{item.name}}</td>
+            <td>{{item.nomenclature}}</td>
+            <td>{{item.formula}}</td>
+            <td>{{item.expirationDate}}</td>
+            <td>
+              <div *ngIf="item.storageStatus" class="px-5 bg-blue-500 text-center text-white rounded">Còn</div>
+              <div *ngIf="!item.storageStatus" class="px-5 bg-red-500 text-center text-white rounded">Còn</div>
+            </td>
+            <td>
+              <div *ngIf="item.usingStatus" class="px-5 bg-blue-500 text-center text-white rounded">Còn hạn</div>
+              <div *ngIf="!item.usingStatus" class="px-5 bg-red-500 text-center text-white rounded">Hết hạn</div>
+            </td>
           </tr>
         </tbody>
       </nz-table>

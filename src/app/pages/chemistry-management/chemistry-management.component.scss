@@ -1,3 +1,8 @@
 .container-main {
   height: calc(100vh - 235px);
 }
+tbody > tr:hover > td {
+  background-color: #20712D!important;
+  color: white!important;
+  cursor: pointer;
+}

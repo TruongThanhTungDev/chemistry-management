@@ -1,5 +1,5 @@
 <div>
-  <div class="grid grid-cols-2 gap-4 mb-3">
+  <div class="grid grid-cols-2 gap-4 mb-5">
     <div>
       <div class="mb-5">
         <div class="text-branch font-bold">
@@ -17,13 +17,16 @@
       </div>
     </div>
     <div>
-      <div class="relative">
-        <label for="upload-file" class="cursor-pointer">
-          <div class="w-518px py-180px text-center border-branch border border-dashed">
+      <div class="relative w-full h-400px">
+        <label for="upload-file1" class="cursor-pointer">
+          <div *ngIf="!otherInfo.bondStructure" class="w-518px py-180px text-center border-branch border border-dashed">
             <i class="fa-solid fa-camera text-branch text-56px"></i>
           </div>
+          <img *ngIf="otherInfo.bondStructure" [src]="otherInfo.bondStructure" alt="Hình ảnh chất hóa học" class="w-full h-full"
+            style="object-fit: cover;">
         </label>
-        <input type="file" class="opacity-0 absolute top-0" id="upload-file" />
+        <input type="file" accept="image/*" class="opacity-0 absolute top-0" id="upload-file1"
+          (change)="onImageSelected($event)" />
         <div class="text-center font-bold">Hình ảnh cấu tạo phân tử</div>
       </div>
     </div>

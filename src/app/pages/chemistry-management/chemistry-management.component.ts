@@ -16,6 +16,7 @@ export class ChemistryManagement implements OnInit {
   @ViewChild('addModal') addModal!: AddEditChemistryComponent;
   REQUEST_URL = 'api/v1/Chemiscal';
   listChemistry: any[] = [];
+  rowSelected: any
   isLoading = false;
   page = 1;
   itemPerPage = 10;
@@ -32,7 +33,7 @@ export class ChemistryManagement implements OnInit {
   }
   getDataChemistry() {
     const payload = {
-      page: this.page,
+      page: this.page - 1,
       size: this.itemPerPage,
       filter: this.filterData(),
       sort: ['id', 'desc'],
@@ -42,7 +43,8 @@ export class ChemistryManagement implements OnInit {
       (res: HttpResponse<any>) => {
         if (res.body.CODE === 200) {
           this.isLoading = false;
-          // this.listChemistry = res.body.RESULT.content;
+          this.listChemistry = res.body.RESULT.content;
+          this.totalItems = res.body.RESULT.totalElements;
         } else {
           this.isLoading = false;
           this.notify.error('Lỗi', 'Lấy danh sách thất bại');
@@ -78,17 +80,23 @@ export class ChemistryManagement implements OnInit {
       nzFooter: [
         {
           label: 'Hủy',
-          onClick: () => modalRef.destroy()
+          onClick: () => modalRef.destroy(),
         },
         {
           label: 'Lưu',
           type: 'primary',
           onClick: async () => {
-            const ref = modalRef.getContentComponent() as AddEditChemistryComponent
-            const res = await ref.saveInformation()
-          }
-        }
-      ]
+            const ref =
+              modalRef.getContentComponent() as AddEditChemistryComponent;
+            const res = (await ref.saveInformation()) as HttpResponse<any>;
+            if (res.body.CODE === 200) {
+              modalRef.close();
+              this.page = 1;
+              this.getDataChemistry();
+            }
+          },
+        },
+      ],
     });
   }
   openBarcodeScannerModal() {
@@ -127,5 +135,51 @@ export class ChemistryManagement implements OnInit {
         //  this.getDataChemistry();
       },
     });
+  }
+  editChemistry(item: any) {
+    const modalRef: NzModalRef = this.modal.create({
+      nzTitle: 'Chỉnh sửa thông tin chất hóa học',
+      nzContent: AddEditChemistryComponent,
+      nzViewContainerRef: this.viewContainerRef,
+      nzWidth: '1100px',
+      nzBodyStyle: {
+        height: '570px',
+        overflowY: 'auto',
+      },
+      nzCentered: true,
+      nzData: {
+        favoriteLibrary: 'angular',
+        favoriteFramework: 'angular',
+      },
+      nzFooter: [
+        {
+          label: 'Hủy',
+          onClick: () => modalRef.destroy(),
+        },
+        {
+          label: 'Lưu',
+          type: 'primary',
+          onClick: async () => {
+            const ref =
+              modalRef.getContentComponent() as AddEditChemistryComponent;
+            const res = (await ref.saveInformation()) as HttpResponse<any>;
+            if (res.body.CODE === 200) {
+              modalRef.close();
+              this.page = 1;
+              this.getDataChemistry();
+            }
+          },
+        },
+      ],
+    });
+    modalRef.componentInstance.data = item
+    modalRef.componentInstance.isEdit = true;
+  }
+  selectRow(item: any) {
+    if (this.rowSelected && this.rowSelected.id === item.id) {
+      this.rowSelected = null;
+    } else {
+      this.rowSelected = item
+    }
   }
 }

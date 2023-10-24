@@ -11,7 +11,7 @@ export class OtherInformationChemistry implements OnInit, AfterViewInit {
     numberOfMoles: '',
     chemicalProperties: '',
     bondStructure: '',
-    // naturalStatus: '',
+    naturalStatus: '',
   };
   editorConfig: AngularEditorConfig = {
     editable: true,
@@ -51,4 +51,16 @@ export class OtherInformationChemistry implements OnInit, AfterViewInit {
   };
   ngOnInit(): void {}
   ngAfterViewInit(): void {}
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = this._handleReaderLoaded.bind(this);
+      reader.readAsDataURL(file);
+    }
+  }
+  _handleReaderLoaded(e: any) {
+    const reader = e.target;
+    this.otherInfo.bondStructure = reader.result
+  }
 }
