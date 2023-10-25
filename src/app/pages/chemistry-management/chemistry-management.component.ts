@@ -189,22 +189,43 @@ export class ChemistryManagement implements OnInit {
     return date ? moment(date, 'YYYYMMDD').format('DD/MM/YYYY') : '';
   }
   clearData() {
-    this.page = 1
-    this.chemiscalName = ''
-    this.getDataChemistry()
+    this.page = 1;
+    this.chemiscalName = '';
+    this.getDataChemistry();
   }
   deleteChemistry() {
     this.modal.create({
       nzTitle: 'Xóa Chất hóa học',
-      nzContent: '<div class="text-center">Bạn có chắc chắn muốn xóa thông tin chất hóa học này!</div>',
+      nzContent:
+        '<div class="text-center">Bạn có chắc chắn muốn xóa thông tin chất hóa học này!</div>',
       nzCentered: true,
       nzOkText: 'Lưu',
       nzCancelText: 'Hủy',
       nzOkType: 'primary',
       nzOnOk: () => {
-        //  this.page = 1;
-        //  this.getDataChemistry();
+        this.handleDelete();
       },
     });
+  }
+  handleDelete() {
+    this.isLoading = true
+    this.service.delete(`${this.REQUEST_URL}/delete`, this.rowSelected.id)
+      .subscribe(
+        (res: HttpResponse<any>) => {
+          if (res.body.CODE === 200) {
+            this.isLoading = false
+            this.notify.success('Thông báo', 'Xóa dữ liệu thành công')
+            this.page = 1
+            this.getDataChemistry()
+          } else {
+            this.isLoading = false;
+            this.notify.error('Lỗi', 'Có lỗi xảy ra, vui lòng thử lại');
+          }
+        },
+        () => {
+           this.isLoading = false;
+           this.notify.error('Lỗi', 'Có lỗi xảy ra, vui lòng thử lại');
+        }
+    )
   }
 }
