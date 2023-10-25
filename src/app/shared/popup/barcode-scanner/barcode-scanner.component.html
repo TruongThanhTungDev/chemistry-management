@@ -1,7 +1,18 @@
 <div>
-  <ngx-barcode-scanner [(value)]="value" [codes]="['code_128', 'ean', 'upc', 'upc_e', 'ean_8']" [errorThreshold]="0.1"
-  (exception)="onError($event)" (valueChange)="getData($event)"></ngx-barcode-scanner>
-  <div>
-    {{value}}
+  <nz-select [(ngModel)]="type" style="width: 200px;">
+    <nz-option [nzValue]="1" nzLabel="Quét mã"></nz-option>
+    <nz-option [nzValue]="2" nzLabel="Tìm kiếm bằng hình ảnh"></nz-option>
+  </nz-select>
+  <div *ngIf="type === 1">
+    <div *ngIf="hasDevice">
+      <ngx-barcode-scanner [(value)]="value" [codes]="['code_128', 'ean', 'upc', 'upc_e', 'ean_8']" [errorThreshold]="0.1"
+        (exception)="onError($event)" (valueChange)="getData($event)"></ngx-barcode-scanner>
+    </div>
+    <div *ngIf="!hasDevice" class="text-center my-5">
+      Vui lòng kết nối tới thiết bị camera
+    </div>
+  </div>
+  <div *ngIf="type === 2">
+    aaaa
   </div>
 </div>

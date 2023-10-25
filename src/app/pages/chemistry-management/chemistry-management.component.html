@@ -74,7 +74,7 @@
       </nz-table>
     </div>
     <div class="text-end">
-      <nz-pagination [nzPageIndex]="page" [nzTotal]="totalItems"></nz-pagination>
+      <nz-pagination [nzPageIndex]="page" [nzTotal]="totalItems" (nzPageIndexChange)="changePage($event)"></nz-pagination>
     </div>
   </nz-spin>
 </div>

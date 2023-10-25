@@ -20,7 +20,7 @@ export class BasicInformationChemistry {
     private notify: NotificationService
   ) {
     this.basicInformation = this.formBuilder.group({
-      code: [''],
+      code: [{value: '', disabled: true}],
       name: ['', [Validators.required]],
       formula: ['', [Validators.required]],
       chemiscalType: ['', [Validators.required]],

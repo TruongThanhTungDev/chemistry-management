@@ -25,7 +25,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
   itemPerPage = 10;
   totalItems = 0;
   chemiscalName: any;
-  barcodeValue: any
+  barcodeValue: any;
   constructor(
     private service: ApiServices,
     private notify: NotificationService,
@@ -36,15 +36,13 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getDataChemistry();
-    this.dataService.data$.subscribe((data:any) => {
-      if(data) {
-        this.selectItemByBarcode(data)
+    this.dataService.data$.subscribe((data: any) => {
+      if (data) {
+        this.selectItemByBarcode(data);
       }
-    })
+    });
   }
-  ngAfterViewInit(): void {
-    
-  }
+  ngAfterViewInit(): void {}
   getDataChemistry() {
     const payload = {
       page: this.page - 1,
@@ -74,7 +72,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
   filterData() {
     const filter = [];
     filter.push('id>0');
-    if (this.barcodeValue) filter.push(`barcode==${this.barcodeValue}`)
+    if (this.barcodeValue) filter.push(`barcode==${this.barcodeValue}`);
     if (this.chemiscalName) filter.push(`name==*${this.chemiscalName}*`);
     return filter.join(';');
   }
@@ -127,7 +125,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
       },
       nzFooter: null,
     });
-    return modal
+    return modal;
   }
   openMultipleAddModal() {
     this.modal.create({
@@ -222,51 +220,64 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
     });
   }
   handleDelete() {
-    this.isLoading = true
-    this.service.delete(`${this.REQUEST_URL}/delete`, this.rowSelected.id)
+    this.isLoading = true;
+    this.service
+      .delete(`${this.REQUEST_URL}/delete`, this.rowSelected.id)
       .subscribe(
         (res: HttpResponse<any>) => {
           if (res.body.CODE === 200) {
-            this.isLoading = false
-            this.notify.success('Thông báo', 'Xóa dữ liệu thành công')
-            this.page = 1
-            this.getDataChemistry()
+            this.isLoading = false;
+            this.notify.success('Thông báo', 'Xóa dữ liệu thành công');
+            this.page = 1;
+            this.getDataChemistry();
           } else {
             this.isLoading = false;
             this.notify.error('Lỗi', 'Có lỗi xảy ra, vui lòng thử lại');
           }
         },
         () => {
-           this.isLoading = false;
-           this.notify.error('Lỗi', 'Có lỗi xảy ra, vui lòng thử lại');
+          this.isLoading = false;
+          this.notify.error('Lỗi', 'Có lỗi xảy ra, vui lòng thử lại');
         }
-    )
+      );
   }
   selectItemByBarcode(barcode: any) {
-    this.barcodeValue = barcode
+    this.barcodeValue = barcode;
     const payload = {
       page: 0,
       size: 99999,
       filter: this.filterData(),
       sort: ['id', 'desc'],
     };
-    this.service.getOption(this.REQUEST_URL, payload, '/search').subscribe(
-      (res: HttpResponse<any>) => {
-        if(res.body.CODE === 200) {
-          if(res.body.RESULT.content.length) {
-            this.barcodeValue = null
-            const result = res.body.RESULT.content.find((item:any) => (+item.barcode) === (+barcode))
-            if(!result) {
-              this.notify.error('Lỗi', 'Không tìm thấy chất hóa học phù hợp, vui lòng thử lại!')  
+    this.service
+      .getOption(this.REQUEST_URL, payload, '/search')
+      .subscribe((res: HttpResponse<any>) => {
+        if (res.body.CODE === 200) {
+          if (res.body.RESULT.content.length) {
+            this.barcodeValue = null;
+            const result = res.body.RESULT.content.find(
+              (item: any) => +item.barcode === +barcode
+            );
+            if (!result) {
+              this.notify.error(
+                'Lỗi',
+                'Không tìm thấy chất hóa học phù hợp, vui lòng thử lại!'
+              );
             } else {
-              this.editChemistry(result)
+              this.editChemistry(result);
             }
           } else {
-            this.barcodeValue = null
-            this.notify.error('Lỗi', 'Không tìm thấy chất hóa học phù hợp, vui lòng thử lại!')
+            this.barcodeValue = null;
+            this.notify.error(
+              'Lỗi',
+              'Không tìm thấy chất hóa học phù hợp, vui lòng thử lại!'
+            );
           }
         }
-      }
-    )
+      });
+  }
+  changePage(event:any) {
+    this.page = event
+    this.getDataChemistry()
   }
 }
