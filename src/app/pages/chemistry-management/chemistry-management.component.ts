@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import * as moment from 'moment';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { ApiServices } from 'src/app/api.services';
@@ -13,8 +13,9 @@ import { NotificationService } from 'src/app/shared/utils/toast.service';
   templateUrl: './chemistry-management.component.html',
   styleUrls: ['./chemistry-management.component.scss'],
 })
-export class ChemistryManagement implements OnInit {
+export class ChemistryManagement implements OnInit, AfterViewInit {
   @ViewChild('addModal') addModal!: AddEditChemistryComponent;
+  @ViewChild('barcode') barcode!: BarcodeScanner;
   REQUEST_URL = 'api/v1/Chemiscal';
   listChemistry: any[] = [];
   rowSelected: any;
@@ -32,6 +33,11 @@ export class ChemistryManagement implements OnInit {
 
   ngOnInit(): void {
     this.getDataChemistry();
+  }
+  ngAfterViewInit(): void {
+    this.barcode.barcode.subscribe((data: any) => {
+      console.log('data :>> ', data);    
+    })
   }
   getDataChemistry() {
     const payload = {

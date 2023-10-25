@@ -1,4 +1,4 @@
-import { Component, Input, inject } from "@angular/core";
+import { Component, EventEmitter, Input, Output, inject } from "@angular/core";
 import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
 
 @Component({
@@ -8,6 +8,7 @@ import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
 })
 export class BarcodeScanner {
   @Input() title?: string;
+  @Output() barcode: EventEmitter<any> = new EventEmitter()
   readonly #modal = inject(NzModalRef);
   readonly nzModalData = inject(NZ_MODAL_DATA);
   value: any;
@@ -17,6 +18,8 @@ export class BarcodeScanner {
     this.isError = true;
   }
   getData(event: any) {
-    console.log('event :>> ', event);
+    if (event) {
+      this.barcode.emit(this.value)
+    }
   }
 }
