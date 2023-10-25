@@ -13,8 +13,8 @@ import { NotificationService } from "src/app/shared/utils/toast.service";
 })
 export class BasicInformationChemistry {
   basicInformation: FormGroup;
-  chemiscalTypeName: any;
   image: any;
+  listChemiscalType: any[] = [];
   constructor(
     private formBuilder: FormBuilder,
     private notify: NotificationService
@@ -31,6 +31,17 @@ export class BasicInformationChemistry {
       usingStatus: [true],
       image: [''],
       barcode: [''],
+      status: [1],
+    });
+  }
+  changeStorageStatus(type: boolean) {
+    this.basicInformation.patchValue({
+      storageStatus: type,
+    });
+  }
+  changeUsingStatus(type: boolean) {
+    this.basicInformation.patchValue({
+      usingStatus: type,
     });
   }
   onImageSelected(event: any) {

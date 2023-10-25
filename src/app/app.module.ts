@@ -28,6 +28,7 @@ import { AddMultipleChemistryModal } from './shared/popup/add-multiple-chemistry
 import { ReactiveFormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NZ_I18N, NzI18nModule, vi_VN } from 'ng-zorro-antd/i18n';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { registerLocaleData } from '@angular/common';
 import vi from '@angular/common/locales/vi'
 
@@ -62,6 +63,7 @@ registerLocaleData(vi)
     ReactiveFormsModule,
     NzDatePickerModule,
     NzI18nModule,
+    NzSelectModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HeadersInterceptor, multi: true },

@@ -1,5 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import * as moment from 'moment';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { ApiServices } from 'src/app/api.services';
 import { AddEditChemistryComponent } from 'src/app/shared/popup/add-edit-chemistry/add-edit-chemistry.component';
@@ -16,11 +17,12 @@ export class ChemistryManagement implements OnInit {
   @ViewChild('addModal') addModal!: AddEditChemistryComponent;
   REQUEST_URL = 'api/v1/Chemiscal';
   listChemistry: any[] = [];
-  rowSelected: any
+  rowSelected: any;
   isLoading = false;
   page = 1;
   itemPerPage = 10;
   totalItems = 0;
+  chemiscalName: any;
   constructor(
     private service: ApiServices,
     private notify: NotificationService,
@@ -60,6 +62,7 @@ export class ChemistryManagement implements OnInit {
   filterData() {
     const filter = [];
     filter.push('id>0');
+    if (this.chemiscalName) filter.push(`name==*${this.chemiscalName}*`);
     return filter.join(';');
   }
   openAddChemistryModal() {
@@ -172,14 +175,36 @@ export class ChemistryManagement implements OnInit {
         },
       ],
     });
-    modalRef.componentInstance.data = item
+    modalRef.componentInstance.data = item;
     modalRef.componentInstance.isEdit = true;
   }
   selectRow(item: any) {
     if (this.rowSelected && this.rowSelected.id === item.id) {
       this.rowSelected = null;
     } else {
-      this.rowSelected = item
+      this.rowSelected = item;
     }
+  }
+  formatDate(date: any) {
+    return date ? moment(date, 'YYYYMMDD').format('DD/MM/YYYY') : '';
+  }
+  clearData() {
+    this.page = 1
+    this.chemiscalName = ''
+    this.getDataChemistry()
+  }
+  deleteChemistry() {
+    this.modal.create({
+      nzTitle: 'Xóa Chất hóa học',
+      nzContent: '<div class="text-center">Bạn có chắc chắn muốn xóa thông tin chất hóa học này!</div>',
+      nzCentered: true,
+      nzOkText: 'Lưu',
+      nzCancelText: 'Hủy',
+      nzOkType: 'primary',
+      nzOnOk: () => {
+        //  this.page = 1;
+        //  this.getDataChemistry();
+      },
+    });
   }
 }

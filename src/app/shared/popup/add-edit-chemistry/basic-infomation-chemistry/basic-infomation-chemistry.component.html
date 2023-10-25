@@ -46,7 +46,9 @@
             <i class="fa-solid fa-vial mr-1"></i>
             Loại chất
           </div>
-          <input type="text" nz-input class="w-full custom-input" formControlName="chemiscalType">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Chọn loại chất" formControlName="chemiscalType">
+            <nz-option *ngFor="let item of listChemiscalType" [nzLabel]="item.name" [nzValue]="item.name"></nz-option>
+          </nz-select>
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -88,14 +90,14 @@
           Tình trạng lưu trữ
         </div>
         <div class="text-center mt-3">
-          <button nz-dropdown [nzDropdownMenu]="menu1" class="bg-blue-600 text-white py-1 px-60px border rounded-lg" nzTrigger="click">
-            Còn
+          <button nz-dropdown [nzDropdownMenu]="menu1" class="text-white py-1 px-60px border rounded-lg" nzTrigger="click" [class]="basicInformation.value.storageStatus ? 'bg-blue-600' : 'bg-red-600'">
+            {{basicInformation.value.storageStatus ? 'Còn' : 'Hết'}}
           </button>
         </div>
         <nz-dropdown-menu #menu1="nzDropdownMenu">
           <ul nz-menu>
-            <li nz-menu-item>Còn</li>
-            <li nz-menu-item>Hết</li>
+            <li nz-menu-item (click)="changeStorageStatus(true)">Còn</li>
+            <li nz-menu-item (click)="changeStorageStatus(false)">Hết</li>
           </ul>
         </nz-dropdown-menu>
       </div>
@@ -105,15 +107,15 @@
           Tình trạng sử dụng
         </div>
         <div class="text-center mt-3">
-          <button nz-dropdown [nzDropdownMenu]="menu1" class="bg-blue-600 text-white py-1 px-60px border rounded-lg"
+          <button nz-dropdown [nzDropdownMenu]="menu2" class="text-white py-1 px-60px border rounded-lg" [class]="basicInformation.value.usingStatus ? 'bg-blue-600' : 'bg-red-600'"
             nzTrigger="click">
-            Chưa hết hạn
+            {{basicInformation.value.usingStatus ? 'Chưa hết hạn' : 'Hết hạn'}}
           </button>
         </div>
         <nz-dropdown-menu #menu2="nzDropdownMenu">
           <ul nz-menu>
-            <li nz-menu-item>Chưa hết hạn</li>
-            <li nz-menu-item>Hết hạn</li>
+            <li nz-menu-item (click)="changeUsingStatus(true)">Chưa hết hạn</li>
+            <li nz-menu-item (click)="changeUsingStatus(false)">Hết hạn</li>
           </ul>
         </nz-dropdown-menu>
       </div>

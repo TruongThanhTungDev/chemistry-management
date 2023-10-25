@@ -3,11 +3,15 @@
     <div class="grid grid-cols-2 gap-2 items-center mb-3">
       <div class="grid grid-cols-2 gap-2">
         <div>
-          <nz-input-group [nzPrefix]="suffixIconSearch">
-            <input type="text" nz-input placeholder="Tìm kiếm theo tên" />
+          <nz-input-group [nzPrefix]="suffixIconSearch" [nzSuffix]="inputClearTpl">
+            <input type="text" nz-input placeholder="Tìm kiếm theo tên" [(ngModel)]="chemiscalName" (keyup.enter)="getDataChemistry()"/>
           </nz-input-group>
           <ng-template #suffixIconSearch>
             <span nz-icon nzType="search"></span>
+          </ng-template>
+          <ng-template #inputClearTpl>
+            <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="chemiscalName"
+              (click)="clearData()"></span>
           </ng-template>
         </div>
         <div>
@@ -30,7 +34,7 @@
             </ul>
           </nz-dropdown-menu>
         </div>
-        <button nz-button nzType="primary" nzDanger="">
+        <button nz-button nzType="primary" nzDanger [disabled]="!rowSelected" (click)="deleteChemistry()">
           <i class="fa-solid fa-trash mr-1"></i>
           Xóa
         </button>
@@ -38,7 +42,7 @@
     </div>
     <div class="container-main">
       <nz-table #tableChemistry [nzData]="listChemistry" nzNoResult="Không có dữ liệu" nzTableLayout="fixed"
-        [nzScroll]="{ x: '1200px', y: 'auto'}" [nzShowPagination]="false">
+        [nzScroll]="{ x: '1200px', y: '400px'}" [nzShowPagination]="false">
         <thead>
           <tr>
             <th class="min-w-200px">Mã chất</th>
@@ -56,7 +60,7 @@
             <td>{{item.name}}</td>
             <td>{{item.nomenclature}}</td>
             <td>{{item.formula}}</td>
-            <td>{{item.expirationDate}}</td>
+            <td>{{formatDate(item.expirationDate)}}</td>
             <td>
               <div *ngIf="item.storageStatus" class="px-5 bg-blue-500 text-center text-white rounded">Còn</div>
               <div *ngIf="!item.storageStatus" class="px-5 bg-red-500 text-center text-white rounded">Còn</div>

@@ -12,7 +12,7 @@ const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    // canActivate: [UserRouteAccessService],
+    canActivate: [UserRouteAccessService],
     children: [
       {
         path: '',

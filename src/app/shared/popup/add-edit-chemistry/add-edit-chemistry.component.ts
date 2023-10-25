@@ -14,14 +14,18 @@ import { OtherInformationChemistry } from './other-information-chemistry/other-i
   styleUrls: ['./add-edit-chemistry.component.scss'],
 })
 export class AddEditChemistryComponent implements OnInit, AfterViewInit {
-  @ViewChild('basicInfo', {static: false}) basicInfo!: BasicInformationChemistry;
-  @ViewChild('otherInfo', {static: false}) otherInfo!: OtherInformationChemistry;
+  @ViewChild('basicInfo', { static: false })
+  basicInfo!: BasicInformationChemistry;
+  @ViewChild('otherInfo', { static: false })
+  otherInfo!: OtherInformationChemistry;
 
   @Input() title?: string;
   @Input() isEdit?: boolean = false;
   @Input() data?: any;
 
   REQUEST_URL = 'api/v1/Chemiscal';
+  REQUEST_CHEMISCAL_TYPE_URL = 'api/v1/chemiscalType';
+
   readonly #addModal = inject(NzModalRef);
   readonly nzModalData = inject(NZ_MODAL_DATA);
   isLoading = false;
@@ -32,7 +36,7 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-      
+    this.getListChemiscalType()
   }
   ngAfterViewInit() {
     if (this.isEdit) {
@@ -46,15 +50,29 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
         image: this.data.image,
         storageStatus: this.data.storageStatus,
         usingStatus: this.data.usingStatus,
-        expirationDate: new Date()
+        expirationDate: new Date(),
       });
-      this.otherInfo.otherInfo.bondStructure = this.data.bondStructure
-      this.otherInfo.otherInfo.chemicalProperties = this.data.chemicalProperties
-      this.otherInfo.otherInfo.numberOfMoles = this.data.numberOfMoles
-      this.otherInfo.otherInfo.physicalProperties = this.data.physicalProperties
-      this.otherInfo.otherInfo.naturalStatus = this.data.naturalStatus
+      this.otherInfo.otherInfo.bondStructure = this.data.bondStructure;
+      this.otherInfo.otherInfo.chemicalProperties =
+        this.data.chemicalProperties;
+      this.otherInfo.otherInfo.numberOfMoles = this.data.numberOfMoles;
+      this.otherInfo.otherInfo.physicalProperties =
+        this.data.physicalProperties;
+      this.otherInfo.otherInfo.naturalStatus = this.data.naturalStatus;
     }
   }
+  getListChemiscalType() {
+    this.isLoading = true;
+    this.service.get(`${this.REQUEST_CHEMISCAL_TYPE_URL}/getAll`).subscribe(
+      (res: HttpResponse<any>) => {
+        if (res.body.CODE === 200) {
+          this.isLoading = false
+          this.basicInfo.listChemiscalType = res.body.RESULT
+        }
+      }
+    )
+  }
+
   saveInformation() {
     return new Promise((resolve: any, reject: any) => {
       if (!this.basicInfo.validateForm()) {
@@ -99,9 +117,8 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
             }
           );
       } else {
-        payload.id = this.data.id 
         this.service
-          .put(this.REQUEST_URL, payload, OPERATIONS.UPDATE)
+          .put(this.REQUEST_URL, payload, `${OPERATIONS.UPDATE}?id=${this.data.id}`)
           .subscribe(
             (res: HttpResponse<any>) => {
               if (res.body.CODE === 200) {
