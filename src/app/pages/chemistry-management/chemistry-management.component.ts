@@ -6,6 +6,7 @@ import { ApiServices } from 'src/app/api.services';
 import { AddEditChemistryComponent } from 'src/app/shared/popup/add-edit-chemistry/add-edit-chemistry.component';
 import { AddMultipleChemistryModal } from 'src/app/shared/popup/add-multiple-chemistry/add-multiple-chemistry.component';
 import { BarcodeScanner } from 'src/app/shared/popup/barcode-scanner/barcode-scanner.component';
+import { DataService } from 'src/app/shared/utils/dataService';
 import { NotificationService } from 'src/app/shared/utils/toast.service';
 
 @Component({
@@ -24,20 +25,25 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
   itemPerPage = 10;
   totalItems = 0;
   chemiscalName: any;
+  barcodeValue: any
   constructor(
     private service: ApiServices,
     private notify: NotificationService,
     private modal: NzModalService,
-    private viewContainerRef: ViewContainerRef
+    private viewContainerRef: ViewContainerRef,
+    private dataService: DataService
   ) {}
 
   ngOnInit(): void {
     this.getDataChemistry();
+    this.dataService.data$.subscribe((data:any) => {
+      if(data) {
+        this.selectItemByBarcode(data)
+      }
+    })
   }
   ngAfterViewInit(): void {
-    this.barcode.barcode.subscribe((data: any) => {
-      console.log('data :>> ', data);    
-    })
+    
   }
   getDataChemistry() {
     const payload = {
@@ -68,6 +74,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
   filterData() {
     const filter = [];
     filter.push('id>0');
+    if (this.barcodeValue) filter.push(`barcode==${this.barcodeValue}`)
     if (this.chemiscalName) filter.push(`name==*${this.chemiscalName}*`);
     return filter.join(';');
   }
@@ -109,7 +116,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
     });
   }
   openBarcodeScannerModal() {
-    this.modal.create({
+    const modal = this.modal.create({
       nzTitle: 'Quét mã Barcode',
       nzContent: BarcodeScanner,
       nzViewContainerRef: this.viewContainerRef,
@@ -120,6 +127,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
       },
       nzFooter: null,
     });
+    return modal
   }
   openMultipleAddModal() {
     this.modal.create({
@@ -232,6 +240,33 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
            this.isLoading = false;
            this.notify.error('Lỗi', 'Có lỗi xảy ra, vui lòng thử lại');
         }
+    )
+  }
+  selectItemByBarcode(barcode: any) {
+    this.barcodeValue = barcode
+    const payload = {
+      page: 0,
+      size: 99999,
+      filter: this.filterData(),
+      sort: ['id', 'desc'],
+    };
+    this.service.getOption(this.REQUEST_URL, payload, '/search').subscribe(
+      (res: HttpResponse<any>) => {
+        if(res.body.CODE === 200) {
+          if(res.body.RESULT.content.length) {
+            this.barcodeValue = null
+            const result = res.body.RESULT.content.find((item:any) => (+item.barcode) === (+barcode))
+            if(!result) {
+              this.notify.error('Lỗi', 'Không tìm thấy chất hóa học phù hợp, vui lòng thử lại!')  
+            } else {
+              this.editChemistry(result)
+            }
+          } else {
+            this.barcodeValue = null
+            this.notify.error('Lỗi', 'Không tìm thấy chất hóa học phù hợp, vui lòng thử lại!')
+          }
+        }
+      }
     )
   }
 }

@@ -31,9 +31,9 @@ import { NZ_I18N, NzI18nModule, vi_VN } from 'ng-zorro-antd/i18n';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { registerLocaleData } from '@angular/common';
 import vi from '@angular/common/locales/vi'
-import { ZXingScannerModule } from '@zxing/ngx-scanner'
 import { NgxBarcodeScannerModule } from '@eisberg-labs/ngx-barcode-scanner';
 import { NgxBarcode6Module } from 'ngx-barcode6';
+import { DataService } from './shared/utils/dataService';
 
 registerLocaleData(vi)
 @NgModule({
@@ -67,13 +67,13 @@ registerLocaleData(vi)
     NzDatePickerModule,
     NzI18nModule,
     NzSelectModule,
-    ZXingScannerModule,
     NgxBarcodeScannerModule,
-    NgxBarcode6Module,
+    NgxBarcode6Module
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HeadersInterceptor, multi: true },
     { provide: NZ_I18N, useValue: vi_VN },
+    DataService
   ],
   bootstrap: [AppComponent],
 })
