@@ -32,6 +32,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { registerLocaleData } from '@angular/common';
 import vi from '@angular/common/locales/vi'
 import { ZXingScannerModule } from '@zxing/ngx-scanner'
+import { NgxBarcodeScannerModule } from '@eisberg-labs/ngx-barcode-scanner';
 registerLocaleData(vi)
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ registerLocaleData(vi)
     NzI18nModule,
     NzSelectModule,
     ZXingScannerModule,
+    NgxBarcodeScannerModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HeadersInterceptor, multi: true },
