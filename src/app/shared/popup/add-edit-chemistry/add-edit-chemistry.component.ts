@@ -7,7 +7,7 @@ import * as moment from 'moment';
 import { OPERATIONS } from 'src/app/app.constants';
 import { HttpResponse } from '@angular/common/http';
 import { OtherInformationChemistry } from './other-information-chemistry/other-information-chemistry.component';
-
+import * as JsBarcode from 'jsbarcode';
 @Component({
   selector: 'add-edit-chemistry',
   templateUrl: './add-edit-chemistry.component.html',
@@ -51,6 +51,7 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
         storageStatus: this.data.storageStatus,
         usingStatus: this.data.usingStatus,
         expirationDate: new Date(),
+        barcode: this.data.barcode
       });
       this.otherInfo.otherInfo.bondStructure = this.data.bondStructure;
       this.otherInfo.otherInfo.chemicalProperties =
@@ -93,7 +94,7 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
       this.isLoading = true;
       if (!this.isEdit) {
         this.service
-          .postOption(this.REQUEST_URL, payload, OPERATIONS.CREATE)
+          .postOption(this.REQUEST_URL, payload, '/createChemiscal')
           .subscribe(
             (res: HttpResponse<any>) => {
               if (res.body.CODE === 200) {

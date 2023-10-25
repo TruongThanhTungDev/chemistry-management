@@ -56,7 +56,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of tableChemistry.data" (dblclick)="editChemistry(item)" (click)="selectRow(item)" [class]="rowSelected && item.id === rowSelected.id ? 'bg-branch' : ''">
-            <td></td>
+            <td>{{item.code}}</td>
             <td>{{item.name}}</td>
             <td>{{item.nomenclature}}</td>
             <td>{{item.formula}}</td>

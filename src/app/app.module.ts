@@ -33,6 +33,8 @@ import { registerLocaleData } from '@angular/common';
 import vi from '@angular/common/locales/vi'
 import { ZXingScannerModule } from '@zxing/ngx-scanner'
 import { NgxBarcodeScannerModule } from '@eisberg-labs/ngx-barcode-scanner';
+import { NgxBarcode6Module } from 'ngx-barcode6';
+
 registerLocaleData(vi)
 @NgModule({
   declarations: [
@@ -67,6 +69,7 @@ registerLocaleData(vi)
     NzSelectModule,
     ZXingScannerModule,
     NgxBarcodeScannerModule,
+    NgxBarcode6Module,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HeadersInterceptor, multi: true },

@@ -10,10 +10,13 @@ export class BarcodeScanner {
   @Input() title?: string;
   readonly #modal = inject(NzModalRef);
   readonly nzModalData = inject(NZ_MODAL_DATA);
-  value: any
-  isError: any
+  value: any;
+  isError: any;
   onError(error: any) {
     console.error(error);
     this.isError = true;
+  }
+  getData(event: any) {
+    console.log('event :>> ', event);
   }
 }
