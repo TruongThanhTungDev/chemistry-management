@@ -5,14 +5,26 @@
   </nz-select>
   <div *ngIf="type === 1">
     <div *ngIf="hasDevice">
-      <ngx-barcode-scanner [(value)]="value" [codes]="['code_128', 'ean', 'upc', 'upc_e', 'ean_8']" [errorThreshold]="0.1"
-        (exception)="onError($event)" (valueChange)="getData($event)"></ngx-barcode-scanner>
+      <ngx-barcode-scanner [(value)]="value" [codes]="['code_128', 'ean', 'upc', 'upc_e', 'ean_8']"
+        [errorThreshold]="0.1" (exception)="onError($event)" (valueChange)="getData($event)"></ngx-barcode-scanner>
     </div>
     <div *ngIf="!hasDevice" class="text-center my-5">
       Vui lòng kết nối tới thiết bị camera
     </div>
   </div>
-  <div *ngIf="type === 2">
-    aaaa
+  <div *ngIf="type === 2" class="text-center">
+    <div class="relative w-full flex justify-center mt-5">
+      <label for="upload-file" class="cursor-pointer">
+        <div *ngIf="!image" class="w-200px py-60px text-center border-branch border border-dashed">
+          <i class="fa-solid fa-camera text-branch text-56px"></i>
+        </div>
+        <img *ngIf="image" [src]="image" alt="Hình ảnh chất hóa học" class="w-full h-full" style="object-fit: cover;">
+      </label>
+      <input type="file" accept="image/*" class="opacity-0 absolute top-0" id="upload-file"
+        (change)="onImageSelected($event)" />
+    </div>
+    <div class="mt-3">
+      <button nz-button nzType="primary" (click)="searchByImage()">Tìm kiếm</button>
+    </div>
   </div>
 </div>

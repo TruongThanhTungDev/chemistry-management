@@ -10,8 +10,10 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { ChemistryManagement } from "../pages/chemistry-management/chemistry-management.component";
 import { ImportChemistry } from "../pages/import-chemistry/import-chemistry.component";
+import { RegisterSchedule } from "../pages/register-schedule/register-schedule.component";
 @NgModule({
   imports: [
     CommonModule,
@@ -24,8 +26,9 @@ import { ImportChemistry } from "../pages/import-chemistry/import-chemistry.comp
     NzTableModule,
     NzPaginationModule,
     NzSpinModule,
+    NzDatePickerModule,
   ],
-  declarations: [ChemistryManagement, ImportChemistry],
+  declarations: [ChemistryManagement, ImportChemistry, RegisterSchedule],
   providers: [],
 })
 export class LayoutModule {}

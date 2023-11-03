@@ -88,6 +88,7 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
             'YYYYMMDD'
           )
         ),
+        status: 1,
         quantity: parseInt(this.basicInfo.basicInformation.value.quantity),
         ...this.otherInfo.otherInfo,
         numberOfMoles: parseFloat(this.otherInfo.otherInfo.numberOfMoles),
@@ -120,6 +121,7 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
           );
       } else {
         payload.id = this.data.id
+        payload.status = this.data.status;
         this.service
           .put(this.REQUEST_URL, payload, `${OPERATIONS.UPDATE}?id=${this.data.id}`)
           .subscribe(

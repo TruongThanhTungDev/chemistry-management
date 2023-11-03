@@ -1,0 +1,48 @@
+<div>
+  <nz-spin [nzSpinning]="isLoading">
+    <div class="grid grid-cols-2 gap-2 items-center mb-3">
+      <div>
+        <nz-range-picker nzFormat="dd/MM/yyyy"></nz-range-picker>
+        <button nz-button class="btn-success ml-2">
+          <i class="fa fa-plus mr-1"></i>
+          Đăng ký
+        </button>
+      </div>
+      <div class="flex items-center justify-end">
+        <button nz-button nzType="primary" class="mr-2">
+          <i class="fa fa-check mr-1"></i>
+          Duyệt
+        </button>
+        <button nz-button nzType="primary" nzDanger>
+          <i class="fa fa-x mr-1"></i>
+          Từ chối
+        </button>
+      </div>
+    </div>
+    <div class="container-main">
+      <nz-table #tableChemistry [nzData]="listResgiter" nzNoResult="Không có dữ liệu" nzTableLayout="fixed"
+        [nzScroll]="{ x: '1200px', y: '400px'}" [nzShowPagination]="false">
+        <thead>
+          <tr>
+            <th class="min-w-200px">Thời gian</th>
+            <th class="min-w-200px">Lớp</th>
+            <th class="min-w-200px">Giáo viên hướng dẫn</th>
+            <th class="min-w-200px">Khung giờ</th>
+            <th class="min-w-250px">Nội dung</th>
+            <th class="min-w-250px">Người duyệt</th>
+            <th class="min-w-250px">Trạng thái đơn</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of tableChemistry.data" (click)="selectRow(item)"
+            [class]="rowSelected && item.id === rowSelected.id ? 'bg-branch text-white' : ''">
+            <td class="text-center">{{item.name}}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+    <div class="text-end">
+      <nz-pagination [nzPageIndex]="page" [nzTotal]="totalItems" (nzPageIndexChange)="changePage($event)"></nz-pagination>
+    </div>
+  </nz-spin>
+</div>    

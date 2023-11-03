@@ -18,6 +18,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzTableModule } from 'ng-zorro-antd/table';
 import { AddEditChemistryComponent } from './shared/popup/add-edit-chemistry/add-edit-chemistry.component';
 import { BasicInformationChemistry } from './shared/popup/add-edit-chemistry/basic-infomation-chemistry/basic-infomation-chemistry.component';
 import { OtherInformationChemistry } from './shared/popup/add-edit-chemistry/other-information-chemistry/other-information-chemistry.component';
@@ -33,7 +34,9 @@ import { registerLocaleData } from '@angular/common';
 import vi from '@angular/common/locales/vi'
 import { NgxBarcodeScannerModule } from '@eisberg-labs/ngx-barcode-scanner';
 import { NgxBarcode6Module } from 'ngx-barcode6';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { DataService } from './shared/utils/dataService';
+import { ImportChemistryPopup } from './shared/popup/import-chemistry-popup/import-chemistry-popup.component';
 
 registerLocaleData(vi)
 @NgModule({
@@ -46,6 +49,7 @@ registerLocaleData(vi)
     OtherInformationChemistry,
     BarcodeScanner,
     AddMultipleChemistryModal,
+    ImportChemistryPopup,
   ],
   imports: [
     FormsModule,
@@ -68,12 +72,14 @@ registerLocaleData(vi)
     NzI18nModule,
     NzSelectModule,
     NgxBarcodeScannerModule,
-    NgxBarcode6Module
+    NgxBarcode6Module,
+    NzTableModule,
+    NzCheckboxModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HeadersInterceptor, multi: true },
     { provide: NZ_I18N, useValue: vi_VN },
-    DataService
+    DataService,
   ],
   bootstrap: [AppComponent],
 })

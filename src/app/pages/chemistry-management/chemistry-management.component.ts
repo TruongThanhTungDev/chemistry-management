@@ -22,6 +22,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
   rowSelected: any;
   isLoading = false;
   page = 1;
+  isAdded = true
   itemPerPage = 10;
   totalItems = 0;
   chemiscalName: any;
@@ -72,6 +73,8 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
   filterData() {
     const filter = [];
     filter.push('id>0');
+    filter.push('orderStatus==1')
+    filter.push(`isAdded==true`);
     if (this.barcodeValue) filter.push(`barcode==${this.barcodeValue}`);
     if (this.chemiscalName) filter.push(`name==*${this.chemiscalName}*`);
     return filter.join(';');
@@ -128,7 +131,8 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
     return modal;
   }
   openMultipleAddModal() {
-    this.modal.create({
+    let isLoadingBtn = false
+    const modalRef: NzModalRef = this.modal.create({
       nzTitle: 'Thêm mới nhiều Chất hóa học',
       nzContent: AddMultipleChemistryModal,
       nzViewContainerRef: this.viewContainerRef,
@@ -142,13 +146,33 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
         favoriteLibrary: 'angular',
         favoriteFramework: 'angular',
       },
-      nzOkText: 'Lưu',
-      nzCancelText: 'Hủy',
-      nzOkType: 'primary',
-      nzOnOk: () => {
-        //  this.page = 1;
-        //  this.getDataChemistry();
-      },
+      nzFooter: [
+        {
+          label: 'Hủy',
+          onClick: () => modalRef.destroy(),
+        },
+        {
+          label: 'Lưu',
+          type: 'primary',
+          loading: () => isLoadingBtn,
+          onClick: async () => {
+            const ref =
+              modalRef.getContentComponent() as AddMultipleChemistryModal;
+            if (!ref.listChecked.length) {
+              isLoadingBtn = false;
+              return
+            }
+            const res = (await ref.addMultipleChemistry()) as HttpResponse<any>;
+            if (res.body.CODE === 200) {
+              modalRef.close();
+              this.page = 1;
+              this.getDataChemistry();
+            } else {
+              isLoadingBtn = false
+            }
+          },
+        },
+      ],
     });
   }
   editChemistry(item: any) {
@@ -280,4 +304,5 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
     this.page = event
     this.getDataChemistry()
   }
+  
 }

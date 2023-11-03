@@ -1,0 +1,81 @@
+<div>
+  <nz-spin [nzSpinning]="isLoading">
+    <div class="grid grid-cols-2 gap-2 items-center mb-3">
+      <div>
+        <button nz-button nzType="primary" class="btn-success" (click)="openImportPopup()">
+          <i class="fa-solid fa-file-import mr-2"></i>
+          Nhập dữ liệu
+        </button>
+        <a nz-dropdown nzTrigger="click" class="mx-2 bg-blue-700 text-14px px-5 text-white py-2 rounded"
+          [nzDropdownMenu]="menu">
+          Trạng thái
+          <span nz-icon nzType="down"></span>
+        </a>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item (click)="filterByStatus(null)" [class]="!orderStatus ? 'bg-blue-500 text-white' : ''">Tất cả</li>
+            <li nz-menu-item (click)="filterByStatus('1')" [class]="orderStatus == '1' ? 'bg-blue-500 text-white' : ''">Đã nhận</li>
+            <li nz-menu-item (click)="filterByStatus('0')" [class]="orderStatus == '0' ? 'bg-blue-500 text-white' : ''">Đang chờ</li>
+            <li nz-menu-item (click)="filterByStatus('2')" [class]="orderStatus == '2' ? 'bg-blue-500 text-white' : ''">Hủy</li>
+          </ul>
+        </nz-dropdown-menu>
+        <button nz-button nzType="primary" nzDanger [disabled]="!rowSelected" (click)="deleteChemistry()">
+          <i class="fa-solid fa-trash mr-2"></i>
+          Xóa
+        </button>
+      </div>
+      <div class="flex items-center justify-end">
+        <nz-range-picker [(ngModel)]="date" (ngModelChange)="changeDate($event)" nzFormat="dd/MM/yyyy"></nz-range-picker>
+      </div>
+    </div>
+    <div class="container-main">
+      <nz-table #tableChemistry [nzData]="listChemistry" nzNoResult="Không có dữ liệu" nzTableLayout="fixed"
+        [nzScroll]="{ x: '1200px', y: '400px'}" [nzShowPagination]="false">
+        <thead>
+          <tr>
+            <th class="min-w-200px">Tên Hóa học</th>
+            <th class="min-w-200px">Danh pháp</th>
+            <th class="min-w-200px">Ký hiệu</th>
+            <th class="min-w-200px">Số lượng</th>
+            <th class="min-w-250px">Hạn sử dụng</th>
+            <th class="min-w-250px">Ngày nhập</th>
+            <th class="min-w-250px">Trạng thái đơn</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of tableChemistry.data" (click)="selectRow(item)" [class]="rowSelected && item.id === rowSelected.id ? 'bg-branch text-white' : ''">
+            <td class="text-center">{{item.name}}</td>
+            <td>{{item.nomenclature}}</td>
+            <td>{{item.formula}}</td>
+            <td>{{item.quantity}}</td>
+            <td>{{formatDate(item.expirationDate)}}</td>
+            <td>{{formatDate(item.createAt)}}</td>
+            <td>
+              <div nz-dropdown *ngIf="item.orderStatus == 0" class="text-center text-white bg-yellow-400 rounded" [nzDropdownMenu]="menu1" nzTrigger="click">
+                Đang chờ
+              </div>
+              <div nz-dropdown *ngIf="item.orderStatus == 1" class="text-center text-white bg-green-500 rounded" [nzDropdownMenu]="menu1" nzTrigger="click">
+                Đã nhận
+              </div>
+              <div nz-dropdown *ngIf="item.orderStatus == 2" class="text-center text-white bg-red-500 rounded" [nzDropdownMenu]="menu1" nzTrigger="click">
+                Hủy
+              </div>
+              <nz-dropdown-menu #menu1="nzDropdownMenu">
+                <ul nz-menu>
+                  <li nz-menu-item (click)="changeStatus(item.id,1)" [class]="orderStatus == '1' ? 'bg-blue-500 text-white' : ''">Đã nhận
+                  </li>
+                  <li nz-menu-item (click)="changeStatus(item.id,0)" [class]="orderStatus == '0' ? 'bg-blue-500 text-white' : ''">Đang chờ
+                  </li>
+                  <li nz-menu-item (click)="changeStatus(item.id,2)" [class]="orderStatus == '2' ? 'bg-blue-500 text-white' : ''">Hủy</li>
+                </ul>
+              </nz-dropdown-menu>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+    <div class="text-end">
+      <nz-pagination [nzPageIndex]="page" [nzTotal]="totalItems" (nzPageIndexChange)="changePage($event)"></nz-pagination>
+    </div>
+  </nz-spin>
+</div>

@@ -76,4 +76,9 @@ export class ApiServices {
       observe: 'response',
     });
   }
+  uploadFile(requestUrl: any, file: any): Observable<HttpResponse<any>> {
+    return this.http.post<any>(this.base_url + requestUrl, file, {
+      observe: 'response',
+    });
+  }
 }
