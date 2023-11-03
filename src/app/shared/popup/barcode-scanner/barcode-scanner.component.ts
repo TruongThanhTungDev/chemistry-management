@@ -76,7 +76,6 @@ export class BarcodeScanner implements OnInit, AfterViewInit {
         },
       },
       (result: any) => {
-        console.log('result :>> ', result);
         if (result && result.codeResult) {
           this.barcode = parseInt(result.codeResult.code)
         } else {
@@ -90,6 +89,7 @@ export class BarcodeScanner implements OnInit, AfterViewInit {
     this.#modal.destroy();
   }
   searchByImage() {
+    this.closeModal()
     this.dataService.sendData(this.barcode);
   }
 }

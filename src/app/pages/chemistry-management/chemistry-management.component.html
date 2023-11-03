@@ -31,6 +31,7 @@
             <ul nz-menu>
               <li nz-menu-item (click)="openAddChemistryModal()">Thêm mới</li>
               <li nz-menu-item (click)="openMultipleAddModal()">Thêm nhiều</li>
+              <li nz-menu-item (click)="openMultipleAddModal()">Thêm từ file có sẵn</li>
             </ul>
           </nz-dropdown-menu>
         </div>
@@ -63,7 +64,7 @@
             <td>{{formatDate(item.expirationDate)}}</td>
             <td>
               <div *ngIf="item.storageStatus" class="px-5 bg-blue-500 text-center text-white rounded">Còn</div>
-              <div *ngIf="!item.storageStatus" class="px-5 bg-red-500 text-center text-white rounded">Còn</div>
+              <div *ngIf="!item.storageStatus" class="px-5 bg-red-500 text-center text-white rounded">Hết</div>
             </td>
             <td>
               <div *ngIf="item.usingStatus" class="px-5 bg-blue-500 text-center text-white rounded">Còn hạn</div>

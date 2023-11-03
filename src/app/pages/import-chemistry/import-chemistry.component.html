@@ -49,7 +49,7 @@
             <td>{{item.formula}}</td>
             <td>{{item.quantity}}</td>
             <td>{{formatDate(item.expirationDate)}}</td>
-            <td>{{formatDate(item.createAt)}}</td>
+            <td>{{formatDate(item.orderAt)}}</td>
             <td>
               <div nz-dropdown *ngIf="item.orderStatus == 0" class="text-center text-white bg-yellow-400 rounded" [nzDropdownMenu]="menu1" nzTrigger="click">
                 Đang chờ

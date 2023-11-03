@@ -17,8 +17,6 @@
         <tbody>
           <tr *ngFor="let item of tableChemistry.data" (click)="selectRow(item)" [class]="listChecked.includes(item) ? 'bg-branch text-white' : ''">
             <td>
-            </td>
-            <td>
               {{item.chemiscalType}}
             </td>
             <td>

@@ -7,7 +7,6 @@ import * as moment from 'moment';
 import { OPERATIONS } from 'src/app/app.constants';
 import { HttpResponse } from '@angular/common/http';
 import { OtherInformationChemistry } from './other-information-chemistry/other-information-chemistry.component';
-import * as JsBarcode from 'jsbarcode';
 @Component({
   selector: 'add-edit-chemistry',
   templateUrl: './add-edit-chemistry.component.html',
@@ -36,32 +35,33 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-     if (this.isEdit) {
-       this.basicInfo.basicInformation.patchValue({
-         code: this.data.code,
-         name: this.data.name,
-         chemiscalType: this.data.chemiscalType,
-         quantity: this.data.quantity,
-         nomenclature: this.data.nomenclature,
-         formula: this.data.formula,
-         image: this.data.image,
-         storageStatus: this.data.storageStatus,
-         usingStatus: this.data.usingStatus,
-         expirationDate: new Date(),
-         barcode: this.data.barcode,
-       });
-       this.otherInfo.otherInfo.bondStructure = this.data.bondStructure;
-       this.otherInfo.otherInfo.chemicalProperties =
-         this.data.chemicalProperties;
-       this.otherInfo.otherInfo.numberOfMoles = this.data.numberOfMoles;
-       this.otherInfo.otherInfo.physicalProperties =
-         this.data.physicalProperties;
-       this.otherInfo.otherInfo.naturalStatus = this.data.naturalStatus;
-     }
-    this.getListChemiscalType()
   }
   ngAfterViewInit() {
-   
+    if (this.isEdit) {
+      this.basicInfo.basicInformation.patchValue({
+        code: this.data.code ? this.data.code : '',
+        name: this.data.name,
+        chemiscalType: this.data.chemiscalType,
+        quantity: this.data.quantity,
+        nomenclature: this.data.nomenclature,
+        formula: this.data.formula,
+        image: this.data.image,
+        storageStatus: this.data.storageStatus,
+        usingStatus: this.data.usingStatus,
+        expirationDate: new Date(),
+        barcode: this.data.barcode,
+        orderStatus: this.data.orderStatus,
+        isAdded: this.data.isAdded,
+      });
+      this.otherInfo.otherInfo.bondStructure = this.data.bondStructure;
+      this.otherInfo.otherInfo.chemicalProperties =
+        this.data.chemicalProperties;
+      this.otherInfo.otherInfo.numberOfMoles = this.data.numberOfMoles;
+      this.otherInfo.otherInfo.physicalProperties =
+        this.data.physicalProperties;
+      this.otherInfo.otherInfo.naturalStatus = this.data.naturalStatus;
+    }
+    this.getListChemiscalType();
   }
   getListChemiscalType() {
     this.isLoading = true;
@@ -122,6 +122,7 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
       } else {
         payload.id = this.data.id
         payload.status = this.data.status;
+        payload.orderAt = this.data.orderAt
         this.service
           .put(this.REQUEST_URL, payload, `${OPERATIONS.UPDATE}?id=${this.data.id}`)
           .subscribe(

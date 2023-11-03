@@ -37,6 +37,7 @@ import { NgxBarcode6Module } from 'ngx-barcode6';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { DataService } from './shared/utils/dataService';
 import { ImportChemistryPopup } from './shared/popup/import-chemistry-popup/import-chemistry-popup.component';
+import { PrintLablePopup } from './shared/popup/print-label/print-label.component';
 
 registerLocaleData(vi)
 @NgModule({
@@ -50,6 +51,7 @@ registerLocaleData(vi)
     BarcodeScanner,
     AddMultipleChemistryModal,
     ImportChemistryPopup,
+    PrintLablePopup,
   ],
   imports: [
     FormsModule,

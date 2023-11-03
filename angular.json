@@ -31,7 +31,10 @@
               "node_modules/ng-zorro-antd/code-editor/style/index.min.css",
               "node_modules/ng-zorro-antd/graph/style/index.min.css"
             ],
-            "scripts": ["node_modules/quagga/dist/quagga.min.js"]
+            "scripts": [
+              "node_modules/quagga/dist/quagga.min.js",
+              "node_modules/html2pdf.js/dist/html2pdf.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {

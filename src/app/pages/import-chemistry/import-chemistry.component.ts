@@ -63,8 +63,8 @@ export class ImportChemistry implements OnInit {
     const filter = [];
     filter.push('id>0');
     filter.push(`isAdded=='false'`);
-    filter.push(`createAt>=${startDate}`);
-    filter.push(`createAt<=${endDate}`);
+    filter.push(`orderAt>=${startDate}`);
+    filter.push(`orderAt<=${endDate}`);
     if(this.orderStatus) filter.push(`orderStatus=in=(${this.orderStatus})`)
     return filter.join(';');
   }

@@ -6,6 +6,7 @@ import { ApiServices } from 'src/app/api.services';
 import { AddEditChemistryComponent } from 'src/app/shared/popup/add-edit-chemistry/add-edit-chemistry.component';
 import { AddMultipleChemistryModal } from 'src/app/shared/popup/add-multiple-chemistry/add-multiple-chemistry.component';
 import { BarcodeScanner } from 'src/app/shared/popup/barcode-scanner/barcode-scanner.component';
+import { PrintLablePopup } from 'src/app/shared/popup/print-label/print-label.component';
 import { DataService } from 'src/app/shared/utils/dataService';
 import { NotificationService } from 'src/app/shared/utils/toast.service';
 
@@ -192,6 +193,11 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
       },
       nzFooter: [
         {
+          label: 'In nhãn Chất',
+          type: 'primary',
+          onClick: () => this.openPrintLabel(item),
+        },
+        {
           label: 'Hủy',
           onClick: () => modalRef.destroy(),
         },
@@ -304,5 +310,38 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
     this.page = event
     this.getDataChemistry()
   }
-  
+  openPrintLabel(item:any) {
+    const modal: NzModalRef = this.modal.create({
+      nzTitle: 'In nhãn chất hóa học',
+      nzContent: PrintLablePopup,
+      nzViewContainerRef: this.viewContainerRef,
+      nzCentered: true,
+      nzData: {
+        favoriteLibrary: 'angular',
+        favoriteFramework: 'angular',
+      },
+      nzWidth: '100%',
+      nzStyle: {
+        height: '100%',
+      },
+      nzBodyStyle: {
+        height: 'calc(100vh - 110px)',
+      },
+      nzFooter: [
+        {
+          label: 'Hủy',
+          onClick: () => modal.destroy(),
+        },
+        {
+          label: 'In',
+          type: 'primary',
+          onClick: () => {
+            const ref = modal.getContentComponent() as PrintLablePopup
+            ref.printLabel()
+          },
+        },
+      ],
+    });
+    modal.componentInstance.data = item
+  }
 }
