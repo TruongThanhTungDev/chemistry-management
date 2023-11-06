@@ -1,0 +1,61 @@
+<form nz-form [formGroup]="registerInformation">
+  <div class="flex">
+    <div class="w-1/3 overflow-auto" style="height: 526px;">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Vui lòng chọn thời gian thực hành!">
+          <div class="text-branch font-bold">
+            <i class="fa-solid fa-clock mr-1"></i>
+            Thời gian
+          </div>
+          <nz-date-picker formControlName="date" nzFormat="dd/MM/yyyy" class="w-full"
+            (ngModelChange)="onChange($event)"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Vui lòng chọn phòng thực hành!">
+          <div class="text-branch font-bold">
+            <i class="fa-solid fa-location-crosshairs mr-1"></i>
+            Phòng
+          </div>
+          <nz-select nzShowSearch nzAllowClear formControlName="room" class="w-full"
+            nzNotFoundContent="Không có phòng thực hành"></nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Vui lòng chọn khung giờ thực hành!">
+          <div class="text-branch font-bold">
+            <i class="fa-solid fa-clock mr-1"></i>
+            Khung giờ
+          </div>
+          <div class="grid grid-cols-2 gap-x-4">
+            <nz-time-picker formControlName="startTime" nzFormat="HH:mm"></nz-time-picker>
+            <nz-time-picker formControlName="endTime" nzFormat="HH:mm"></nz-time-picker>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Vui lòng chọn phòng thực hành!">
+          <div class="text-branch font-bold">
+            <i class="fa-solid fa-user mr-1"></i>
+            Người quản lý
+          </div>
+          <nz-select nzShowSearch nzAllowClear formControlName="room" class="w-full"
+            nzNotFoundContent="Không có thông tin người quản lý"></nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Vui lòng chọn phòng thực hành!">
+          <div class="text-branch font-bold">
+            <i class="fa-solid fa-note-sticky mr-1"></i>
+            Nội dung
+          </div>
+          <input nz-input placeholder="Nhập nội dung mượn phòng" formControlName="note" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div class="w-2/3 pl-5 overflow-auto" style="height: 526px;">
+      <mwl-calendar-day-view [viewDate]="viewDate" [events]="events">
+      </mwl-calendar-day-view>
+    </div>
+  </div>
+</form>

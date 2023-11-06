@@ -38,6 +38,10 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { DataService } from './shared/utils/dataService';
 import { ImportChemistryPopup } from './shared/popup/import-chemistry-popup/import-chemistry-popup.component';
 import { PrintLablePopup } from './shared/popup/print-label/print-label.component';
+import { RegisterSchedulePopup } from './shared/popup/register-schedule-popup/register-schedule-popup.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 
 registerLocaleData(vi)
 @NgModule({
@@ -52,6 +56,7 @@ registerLocaleData(vi)
     AddMultipleChemistryModal,
     ImportChemistryPopup,
     PrintLablePopup,
+    RegisterSchedulePopup,
   ],
   imports: [
     FormsModule,
@@ -77,6 +82,11 @@ registerLocaleData(vi)
     NgxBarcode6Module,
     NzTableModule,
     NzCheckboxModule,
+    NzTimePickerModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    })
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HeadersInterceptor, multi: true },

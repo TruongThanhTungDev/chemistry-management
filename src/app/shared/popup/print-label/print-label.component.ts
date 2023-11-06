@@ -13,7 +13,6 @@ export class PrintLablePopup {
     return date ? moment(date, 'YYYYMMDD').format('DD/MM/YYYY') : '';
   }
   printLabel() {
-    console.log('12 :>> ', 12);
     var element = document.getElementById('element-to-print');
     const finalEle = element?.innerHTML;
     let str = '<html><head><title>Tour</title>'

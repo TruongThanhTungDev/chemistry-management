@@ -62,6 +62,7 @@ module.exports = {
         "80px": "80px",
         "150px": "150px",
         "200px": "200px",
+        "300px": "300px",
         "250px": "250px",
       },
       margin: {

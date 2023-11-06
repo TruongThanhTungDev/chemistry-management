@@ -3,5 +3,5 @@
 @tailwind components;
 @tailwind utilities;
 @import './assets/scss/custom.scss';
-
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
 @primary-color: #f5222d;
