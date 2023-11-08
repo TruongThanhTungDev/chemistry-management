@@ -1,0 +1,51 @@
+<div>
+  <nz-spin [nzSpinning]="isLoading">
+    <div class="mb-5">
+      <div class="flex items-center">
+        <label for="upload-photo" class="bg-blue-500 text-white py-3 px-5 rounded cursor-pointer">Chọn file có
+          sẵn</label>
+        <input type="file" name="photo" id="upload-photo" (change)="selectFile($event)" />
+        <div class="ml-3">
+          {{this.selectedFile ? this.selectedFile.name : ''}}
+        </div>
+      </div>
+    </div>
+    <div>
+      <nz-table #tableChemistry [nzData]="listChemistry" nzNoResult="Không có dữ liệu" nzTableLayout="fixed"
+        [nzScroll]="{ x: '1200px', y: '300px'}">
+        <thead>
+          <tr>
+            <th class="min-w-200px">Loại chất</th>
+            <th class="min-w-200px">Tên Hóa học</th>
+            <th class="min-w-200px">Danh pháp</th>
+            <th class="min-w-200px">Ký hiệu</th>
+            <th class="min-w-200px">Số lượng</th>
+            <th class="min-w-250px">Hạn sử dụng</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of tableChemistry.data">
+            <td>
+              {{item.chemiscalType}}
+            </td>
+            <td>
+              {{item.name}}
+            </td>
+            <td>
+              {{item.nomenclature}}
+            </td>
+            <td>
+              {{item.formula}}
+            </td>
+            <td>
+              {{item.quantity}}
+            </td>
+            <td>
+              {{formatDate(item.expirationDate)}}
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </nz-spin>
+</div>

@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { ApiServices } from 'src/app/api.services';
 import { AddEditChemistryComponent } from 'src/app/shared/popup/add-edit-chemistry/add-edit-chemistry.component';
+import { AddMultipleChemistryByFile } from 'src/app/shared/popup/add-multiple-chemistry-by-file/add-multiple-chemistry-by-file.component';
 import { AddMultipleChemistryModal } from 'src/app/shared/popup/add-multiple-chemistry/add-multiple-chemistry.component';
 import { BarcodeScanner } from 'src/app/shared/popup/barcode-scanner/barcode-scanner.component';
 import { PrintLablePopup } from 'src/app/shared/popup/print-label/print-label.component';
@@ -23,7 +24,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
   rowSelected: any;
   isLoading = false;
   page = 1;
-  isAdded = true
+  isAdded = true;
   itemPerPage = 10;
   totalItems = 0;
   chemiscalName: any;
@@ -74,7 +75,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
   filterData() {
     const filter = [];
     filter.push('id>0');
-    filter.push('orderStatus==1')
+    filter.push('orderStatus=in=(1,3)');
     filter.push(`isAdded==true`);
     if (this.barcodeValue) filter.push(`barcode==${this.barcodeValue}`);
     if (this.chemiscalName) filter.push(`name==*${this.chemiscalName}*`);
@@ -132,7 +133,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
     return modal;
   }
   openMultipleAddModal() {
-    let isLoadingBtn = false
+    let isLoadingBtn = false;
     const modalRef: NzModalRef = this.modal.create({
       nzTitle: 'Thêm mới nhiều Chất hóa học',
       nzContent: AddMultipleChemistryModal,
@@ -161,7 +162,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
               modalRef.getContentComponent() as AddMultipleChemistryModal;
             if (!ref.listChecked.length) {
               isLoadingBtn = false;
-              return
+              return;
             }
             const res = (await ref.addMultipleChemistry()) as HttpResponse<any>;
             if (res.body.CODE === 200) {
@@ -169,8 +170,40 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
               this.page = 1;
               this.getDataChemistry();
             } else {
-              isLoadingBtn = false
+              isLoadingBtn = false;
             }
+          },
+        },
+      ],
+    });
+  }
+  openMultipleAddByFile() {
+    let isLoadingBtn = false;
+    const modalRef: NzModalRef = this.modal.create({
+      nzTitle: 'Thêm mới nhiều Chất hóa học với dữ liệu có sẵn',
+      nzContent: AddMultipleChemistryByFile,
+      nzViewContainerRef: this.viewContainerRef,
+      nzWidth: '1100px',
+      nzBodyStyle: {
+        height: '570px',
+        overflowY: 'auto',
+      },
+      nzCentered: true,
+      nzData: {
+        favoriteLibrary: 'angular',
+        favoriteFramework: 'angular',
+      },
+      nzFooter: [
+        {
+          label: 'Hủy',
+          onClick: () => modalRef.destroy(),
+        },
+        {
+          label: 'Lưu',
+          type: 'primary',
+          loading: () => isLoadingBtn,
+          onClick: async () => {
+            
           },
         },
       ],
@@ -306,11 +339,11 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
         }
       });
   }
-  changePage(event:any) {
-    this.page = event
-    this.getDataChemistry()
+  changePage(event: any) {
+    this.page = event;
+    this.getDataChemistry();
   }
-  openPrintLabel(item:any) {
+  openPrintLabel(item: any) {
     const modal: NzModalRef = this.modal.create({
       nzTitle: 'In nhãn chất hóa học',
       nzContent: PrintLablePopup,
@@ -336,12 +369,12 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
           label: 'In',
           type: 'primary',
           onClick: () => {
-            const ref = modal.getContentComponent() as PrintLablePopup
-            ref.printLabel()
+            const ref = modal.getContentComponent() as PrintLablePopup;
+            ref.printLabel();
           },
         },
       ],
     });
-    modal.componentInstance.data = item
+    modal.componentInstance.data = item;
   }
 }

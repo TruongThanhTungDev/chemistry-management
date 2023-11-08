@@ -65,12 +65,23 @@
     </div>
     <div class="grid grid-cols-2 gap-6">
       <nz-form-item>
-        <nz-form-control nzErrorTip="Vui lòng nhập Số lượng!">
-          <div class="text-branch font-bold">
-            <i class="fa-solid fa-hashtag mr-1"></i>
-            Số lượng
+        <nz-form-control nzErrorTip="Vui lòng nhập Số lượng và Đơn vị!">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <div class="text-branch font-bold">
+                <i class="fa-solid fa-hashtag mr-1"></i>
+                Số lượng
+              </div>
+              <input type="text" nz-input class="w-full custom-input" formControlName="quantity">
+            </div>
+            <div>
+              <div class="text-branch font-bold">
+                <i class="fa-solid fa-hashtag mr-1"></i>
+                Đơn vị
+              </div>
+              <input type="text" nz-input class="w-full custom-input" formControlName="unit">
+            </div>
           </div>
-          <input type="text" nz-input class="w-full custom-input" formControlName="quantity">
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>

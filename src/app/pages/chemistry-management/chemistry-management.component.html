@@ -31,7 +31,7 @@
             <ul nz-menu>
               <li nz-menu-item (click)="openAddChemistryModal()">Thêm mới</li>
               <li nz-menu-item (click)="openMultipleAddModal()">Thêm nhiều</li>
-              <li nz-menu-item (click)="openMultipleAddModal()">Thêm từ file có sẵn</li>
+              <li nz-menu-item (click)="openMultipleAddByFile()">Thêm từ file có sẵn</li>
             </ul>
           </nz-dropdown-menu>
         </div>
@@ -50,6 +50,7 @@
             <th class="min-w-200px">Tên Hóa học</th>
             <th class="min-w-200px">Danh pháp</th>
             <th class="min-w-200px">Ký hiệu</th>
+            <th class="min-w-200px">Số lượng</th>
             <th class="min-w-200px">Hạn sử dụng</th>
             <th class="min-w-250px">Tình trạng lưu trữ</th>
             <th class="min-w-250px">Tình trạng sử dụng</th>
@@ -61,6 +62,7 @@
             <td>{{item.name}}</td>
             <td>{{item.nomenclature}}</td>
             <td>{{item.formula}}</td>
+            <td>{{item.quantity + ' ' + (item.unit ? item.unit : '')}}</td>
             <td>{{formatDate(item.expirationDate)}}</td>
             <td>
               <div *ngIf="item.storageStatus" class="px-5 bg-blue-500 text-center text-white rounded">Còn</div>

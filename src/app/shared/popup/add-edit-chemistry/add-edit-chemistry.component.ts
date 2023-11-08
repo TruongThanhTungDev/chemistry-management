@@ -52,6 +52,7 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
         barcode: this.data.barcode,
         orderStatus: this.data.orderStatus,
         isAdded: this.data.isAdded,
+        unit: this.data.unit
       });
       this.otherInfo.otherInfo.bondStructure = this.data.bondStructure;
       this.otherInfo.otherInfo.chemicalProperties =

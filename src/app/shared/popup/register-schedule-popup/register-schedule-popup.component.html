@@ -1,61 +1,105 @@
 <form nz-form [formGroup]="registerInformation">
-  <div class="flex">
-    <div class="w-1/3 overflow-auto" style="height: 526px;">
-      <nz-form-item>
-        <nz-form-control nzErrorTip="Vui lòng chọn thời gian thực hành!">
-          <div class="text-branch font-bold">
-            <i class="fa-solid fa-clock mr-1"></i>
-            Thời gian
-          </div>
-          <nz-date-picker formControlName="date" nzFormat="dd/MM/yyyy" class="w-full"
-            (ngModelChange)="onChange($event)"></nz-date-picker>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-control nzErrorTip="Vui lòng chọn phòng thực hành!">
-          <div class="text-branch font-bold">
-            <i class="fa-solid fa-location-crosshairs mr-1"></i>
-            Phòng
-          </div>
-          <nz-select nzShowSearch nzAllowClear formControlName="room" class="w-full"
-            nzNotFoundContent="Không có phòng thực hành"></nz-select>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-control nzErrorTip="Vui lòng chọn khung giờ thực hành!">
-          <div class="text-branch font-bold">
-            <i class="fa-solid fa-clock mr-1"></i>
-            Khung giờ
-          </div>
-          <div class="grid grid-cols-2 gap-x-4">
-            <nz-time-picker formControlName="startTime" nzFormat="HH:mm"></nz-time-picker>
-            <nz-time-picker formControlName="endTime" nzFormat="HH:mm"></nz-time-picker>
-          </div>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-control nzErrorTip="Vui lòng chọn phòng thực hành!">
-          <div class="text-branch font-bold">
-            <i class="fa-solid fa-user mr-1"></i>
-            Người quản lý
-          </div>
-          <nz-select nzShowSearch nzAllowClear formControlName="room" class="w-full"
-            nzNotFoundContent="Không có thông tin người quản lý"></nz-select>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-control nzErrorTip="Vui lòng chọn phòng thực hành!">
-          <div class="text-branch font-bold">
-            <i class="fa-solid fa-note-sticky mr-1"></i>
-            Nội dung
-          </div>
-          <input nz-input placeholder="Nhập nội dung mượn phòng" formControlName="note" />
-        </nz-form-control>
-      </nz-form-item>
+  <nz-spin [nzSpinning]="isLoading">
+    <div class="flex">
+      <div class="w-1/3 overflow-auto" style="height: 526px;">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Vui lòng chọn thời gian thực hành!">
+            <div class="text-branch font-bold">
+              <i class="fa-solid fa-clock mr-1"></i>
+              Thời gian
+            </div>
+            <nz-date-picker formControlName="date" nzFormat="dd/MM/yyyy" class="w-full"
+              (ngModelChange)="onCalendarChange($event)"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <div class="grid grid-cols-2 gap-4">
+          <nz-form-item>
+            <nz-form-control nzErrorTip="Vui lòng nhập tên lớp học">
+              <div class="text-branch font-bold">
+                <i class="fa-solid fa-location-crosshairs mr-1"></i>
+                Lớp
+              </div>
+              <input nz-input placeholder="Nhập tên lớp" formControlName="className" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control nzErrorTip="Vui lòng chọn phòng thực hành!">
+              <div class="text-branch font-bold">
+                <i class="fa-solid fa-location-crosshairs mr-1"></i>
+                Phòng
+              </div>
+              <nz-select nzShowSearch nzAllowClear formControlName="room" class="w-full"
+                nzNotFoundContent="Không có phòng thực hành">
+                <nz-option *ngFor="let item of listLaboratory" [nzLabel]="item.name" [nzValue]="item.name"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Vui lòng chọn khung giờ thực hành!">
+            <div class="text-branch font-bold">
+              <i class="fa-solid fa-clock mr-1"></i>
+              Khung giờ
+            </div>
+            <div class="grid grid-cols-2 gap-x-4">
+              <nz-time-picker formControlName="startTime" nzFormat="HH:mm"
+                (ngModelChange)="changeStartTime($event)"></nz-time-picker>
+              <nz-time-picker formControlName="endTime" nzFormat="HH:mm"
+                (ngModelChange)="changeEndTime($event)"></nz-time-picker>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Vui lòng chọn phòng thực hành!">
+            <div class="text-branch font-bold">
+              <i class="fa-solid fa-user mr-1"></i>
+              Người quản lý
+            </div>
+            <nz-select nzShowSearch nzAllowClear formControlName="room" class="w-full"
+              nzNotFoundContent="Không có thông tin người quản lý">
+              <nz-option *ngFor="let item of listManager" [nzLabel]="item.fullName" [nzValue]="item.id"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Vui lòng chọn phòng thực hành!">
+            <div class="text-branch font-bold">
+              <i class="fa-solid fa-note-sticky mr-1"></i>
+              Nội dung
+            </div>
+            <input nz-input placeholder="Nhập nội dung mượn phòng" formControlName="description" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Vui lòng chọn phòng thực hành!">
+            <div class="text-branch font-bold">
+              <i class="fa-solid fa-flask mr-1"></i>
+              Chọn chất hóa học
+            </div>
+            <div class="mb-3">
+              <div *ngFor="let item of listSelectChemisrty" class="grid grid-cols-2 gap-4 mb-3">
+                <div>
+                  <nz-select nzShowSearch nzAllowClear class="w-full" [(ngModel)]="item.code"
+                    nzNotFoundContent="Không có chất hóa học nào">
+                    <nz-option *ngFor="let item of listChemistry" [nzLabel]="item.fullName" [nzValue]="item.code"></nz-option>
+                  </nz-select>
+                </div>
+                <div class="flex items-center">
+                  <input nz-input [(ngModel)]="item.quantity" type="number" min="0"/>
+                  <div>{{item.unit}}</div>
+                </div>
+              </div>
+            </div>
+            <button nz-button class="btn-success" (click)="addNewChooseChemistry()">
+              <i class="fa fa-plus"></i>
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div class="w-2/3 pl-5 overflow-auto" style="height: 526px;">
+        <mwl-calendar-day-view [viewDate]="viewDate" [events]="events">
+        </mwl-calendar-day-view>
+      </div>
     </div>
-    <div class="w-2/3 pl-5 overflow-auto" style="height: 526px;">
-      <mwl-calendar-day-view [viewDate]="viewDate" [events]="events">
-      </mwl-calendar-day-view>
-    </div>
-  </div>
+  </nz-spin>
 </form>

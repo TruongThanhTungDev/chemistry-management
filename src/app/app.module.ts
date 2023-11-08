@@ -42,6 +42,7 @@ import { RegisterSchedulePopup } from './shared/popup/register-schedule-popup/re
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
+import { AddMultipleChemistryByFile } from './shared/popup/add-multiple-chemistry-by-file/add-multiple-chemistry-by-file.component';
 
 registerLocaleData(vi)
 @NgModule({
@@ -57,6 +58,7 @@ registerLocaleData(vi)
     ImportChemistryPopup,
     PrintLablePopup,
     RegisterSchedulePopup,
+    AddMultipleChemistryByFile
   ],
   imports: [
     FormsModule,

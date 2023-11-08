@@ -33,6 +33,7 @@ export class BasicInformationChemistry {
       barcode: [''],
       orderStatus: [1],
       isAdded: ['true'],
+      unit: ['', [Validators.required]]
     });
   }
   changeStorageStatus(type: boolean) {
