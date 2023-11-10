@@ -24,6 +24,8 @@
     "@zxing/ngx-scanner": "^16.1.0",
     "angular-calendar": "^0.31.0",
     "date-fns": "^2.30.0",
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
     "html2pdf.js": "^0.10.1",
     "jsbarcode": "^3.11.5",
     "moment": "^2.29.4",
@@ -33,12 +35,14 @@
     "read-excel-file": "^5.7.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "xlsx": "^0.18.5",
     "zone.js": "~0.13.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.0.4",
     "@angular/cli": "~16.0.4",
     "@angular/compiler-cli": "^16.0.0",
+    "@types/file-saver": "^2.0.7",
     "@types/jasmine": "~4.3.0",
     "@types/node": "^20.8.8",
     "autoprefixer": "^10.4.16",

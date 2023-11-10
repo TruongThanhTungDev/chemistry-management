@@ -81,6 +81,14 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
     if (this.chemiscalName) filter.push(`name==*${this.chemiscalName}*`);
     return filter.join(';');
   }
+  filterAllData() {
+    const filter = [];
+    filter.push('id>0');
+    filter.push('orderStatus=in=(1,3)');
+    filter.push(`isAdded==true`);
+    filter.push('storageStatus==true');
+    return filter.join(';');
+  }
   openAddChemistryModal() {
     const modalRef: NzModalRef = this.modal.create({
       nzTitle: 'Thêm mới chất hóa học',
@@ -104,6 +112,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
         {
           label: 'Lưu',
           type: 'primary',
+          autoLoading: false,
           onClick: async () => {
             const ref =
               modalRef.getContentComponent() as AddEditChemistryComponent;
@@ -201,9 +210,15 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
         {
           label: 'Lưu',
           type: 'primary',
-          loading: () => isLoadingBtn,
+          autoLoading: false,
           onClick: async () => {
-            
+            const ref =
+              modalRef.getContentComponent() as AddMultipleChemistryByFile;
+            const res = (await ref.saveUploadFile()) as HttpResponse<any>;
+            if (res.body.CODE === 200) {
+              this.page = 1;
+              this.getDataChemistry();
+            }
           },
         },
       ],
@@ -237,6 +252,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
         {
           label: 'Lưu',
           type: 'primary',
+          autoLoading: false,
           onClick: async () => {
             const ref =
               modalRef.getContentComponent() as AddEditChemistryComponent;
@@ -368,6 +384,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
         {
           label: 'In',
           type: 'primary',
+          autoLoading: false,
           onClick: () => {
             const ref = modal.getContentComponent() as PrintLablePopup;
             ref.printLabel();
@@ -376,5 +393,29 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
       ],
     });
     modal.componentInstance.data = item;
+  }
+  exportToExcel() {
+    let list = []
+    const payload = {
+      page: 0,
+      size: 99999,
+      filter: this.filterAllData(),
+      sort: ['id', 'desc']
+    }
+    this.isLoading = true
+    this.service.getOption(this.REQUEST_URL, payload, '/search').subscribe(
+      (res: HttpResponse<any>) => {
+        if (res.body.CODE === 200) {
+          this.isLoading = false
+          list = res.body.RESULT.content
+        } else {
+          this.isLoading = false;
+        }
+      },
+      () => {
+        console.error()
+        this.isLoading = false
+      }
+    )
   }
 }

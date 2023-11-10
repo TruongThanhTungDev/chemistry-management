@@ -20,7 +20,7 @@ export class BasicInformationChemistry {
     private notify: NotificationService
   ) {
     this.basicInformation = this.formBuilder.group({
-      code: [{ value: '', disabled: true }],
+      code: [''],
       name: ['', [Validators.required]],
       formula: ['', [Validators.required]],
       chemiscalType: ['', [Validators.required]],
@@ -33,7 +33,8 @@ export class BasicInformationChemistry {
       barcode: [''],
       orderStatus: [1],
       isAdded: ['true'],
-      unit: ['', [Validators.required]]
+      unit: ['', [Validators.required]],
+      orderAt: ['']
     });
   }
   changeStorageStatus(type: boolean) {

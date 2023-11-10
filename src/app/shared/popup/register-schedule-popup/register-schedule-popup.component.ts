@@ -28,14 +28,14 @@ export class RegisterSchedulePopup implements OnInit {
   REQUEST_USER_URL = 'api/v1/account';
   REQUEST_CHEMISCAL_URL = 'api/v1/Chemiscal';
   viewDate!: Date;
-  registerInformation: FormGroup;
+  registerInformation!: FormGroup;
   selectedDateTime: any[] = [new Date(), new Date()];
   selectRoom: any;
   events: CalendarEvent[] = [];
   isLoading = false;
   listLaboratory: any[] = [];
   listManager: any[] = [];
-  listChemistry: any[] = []
+  listChemistry: any[] = [];
   listSelectChemisrty: any[] = [
     {
       chemistryName: '',
@@ -51,51 +51,77 @@ export class RegisterSchedulePopup implements OnInit {
     private notify: NotificationService,
     private service: ApiServices
   ) {
-    this.registerInformation = this.formBuilder.group({
-      date: [new Date(), [Validators.required]],
-      className: ['', [Validators.required]],
-      room: ['', [Validators.required]],
-      startTime: [null as any, [Validators.required]],
-      endTime: [null as any, [Validators.required]],
-      description: [''],
-    });
-    this.viewDate = this.registerInformation.value.date;
+    if (!this.isEdit) {
+      this.registerInformation = this.formBuilder.group({
+        date: [new Date(), [Validators.required]],
+        className: ['', [Validators.required]],
+        room: ['', [Validators.required]],
+        startTime: [new Date().setHours(9, 0, 0), [Validators.required]],
+        endTime: [new Date().setHours(10, 0, 0), [Validators.required]],
+        description: [''],
+      });
+      this.viewDate = this.registerInformation.value.date;
+      const payload = {
+        start: this.registerInformation.value.startTime,
+        end: this.registerInformation.value.endTime
+          ? this.registerInformation.value.endTime
+          : endOfDay(new Date()),
+        title:
+          this.registerInformation.value.className +
+          ' ' +
+          this.registerInformation.value.description,
+      };
+      this.events.push(payload);
+    }
   }
 
   ngOnInit(): void {
     this.getAllLaboratory();
     this.getAllManager();
-    this.getAllChemistry()
+    this.getAllChemistry();
   }
 
   changeStartTime(event: any) {
+    this.events.pop()
     const payload = {
       start: event,
-      end: this.registerInformation.value.endTime
-        ? this.registerInformation.value.endTime
-        : endOfDay(new Date()),
+      end: this.registerInformation.value.endTime,
       title:
         this.registerInformation.value.className +
         ' ' +
         this.registerInformation.value.description,
     };
-    this.events = [...this.events, payload];
+    this.events.push(payload);
   }
   changeEndTime(event: any) {
+    this.events.pop();
     const payload = {
-      start: !this.registerInformation.value.startTime
-        ? startOfDay(new Date())
-        : this.registerInformation.value.startTime,
+      start: this.registerInformation.value.startTime,
       end: event,
       title:
         this.registerInformation.value.className +
         ' ' +
         this.registerInformation.value.description,
     };
-    this.events = [...this.events, payload];
+    this.events.push(payload)
   }
   onCalendarChange(event: any) {
+    this.events.pop();
     const day = parseInt(moment(event).format('YYYYMMDD'));
+    this.registerInformation.patchValue({
+      date: new Date(event),
+      startTime: new Date(event).setHours(9, 0, 0),
+      endTime: new Date(event).setHours(10, 0, 0),
+    });
+    const payload = {
+      start: event,
+      end: this.registerInformation.value.endTime,
+      title:
+        this.registerInformation.value.className +
+        ' ' +
+        this.registerInformation.value.description,
+    };
+    this.events.push(payload)
     this.getCalendarOfDay(day);
   }
   getCalendarOfDay(day: any) {
@@ -182,5 +208,21 @@ export class RegisterSchedulePopup implements OnInit {
       unit: '',
     };
     this.listSelectChemisrty.push(newItem);
+  }
+  changeSelectedChemistry(event: any, index: any) {
+    const result = this.listChemistry.find((item: any) => item.code === event)
+    if (result) {
+      this.listSelectChemisrty[index].unit = result.unit;
+    }
+  }
+  disableItemSelect(item: any) {
+    const arr = this.listSelectChemisrty.map((item: any) => item.code);
+    return arr.includes(item)
+  }
+  removeSelectedChemistry(index: any) {
+    if (this.listSelectChemisrty.length === 1) {
+      return
+    }
+    this.listSelectChemisrty.splice(index,1)
   }
 }

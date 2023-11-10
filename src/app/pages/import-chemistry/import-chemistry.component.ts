@@ -6,6 +6,7 @@ import { DataService } from 'src/app/shared/utils/dataService';
 import { NotificationService } from "src/app/shared/utils/toast.service";
 import { HttpResponse } from '@angular/common/http';
 import * as moment from 'moment';
+import { ExcelService } from 'src/app/shared/utils/export-excel.service';
 @Component({
   selector: 'import-chemistry',
   templateUrl: './import-chemistry.component.html',
@@ -17,7 +18,7 @@ export class ImportChemistry implements OnInit {
   page = 1;
   itemPerPage = 10;
   totalItems = 0;
-  orderStatus: any
+  orderStatus: any;
   listChemistry: any[] = [];
   rowSelected: any;
   date = [new Date(), new Date()];
@@ -26,7 +27,8 @@ export class ImportChemistry implements OnInit {
     private notify: NotificationService,
     private modal: NzModalService,
     private viewContainerRef: ViewContainerRef,
-    private dataService: DataService
+    private dataService: DataService,
+    private excelService: ExcelService
   ) {}
   ngOnInit(): void {
     this.getDataChemistry();
@@ -65,35 +67,37 @@ export class ImportChemistry implements OnInit {
     filter.push(`isAdded=='false'`);
     filter.push(`orderAt>=${startDate}`);
     filter.push(`orderAt<=${endDate}`);
-    if(this.orderStatus) filter.push(`orderStatus=in=(${this.orderStatus})`)
+    if (this.orderStatus) filter.push(`orderStatus=in=(${this.orderStatus})`);
     return filter.join(';');
   }
   filterByStatus(status: any) {
-    this.orderStatus = status
-    this.getDataChemistry()
+    this.orderStatus = status;
+    this.getDataChemistry();
   }
-  changeStatus(chemiscalId:any, status: any) {
+  changeStatus(chemiscalId: any, status: any) {
     const payload = {
       chemiscalId,
-      status
-    }
-    this.isLoading = true
-    this.service.postOption(this.REQUEST_URL, payload, '/changeStoreStatus').subscribe(
-      (res: HttpResponse<any>) => {
-        if (res.body.CODE === 200) {
-          this.isLoading = false
-          this.getDataChemistry()
-        } else {
-          this.isLoading = false 
-          this.notify.error('Lỗi', res.body.MESSAGE)
+      status,
+    };
+    this.isLoading = true;
+    this.service
+      .postOption(this.REQUEST_URL, payload, '/changeStoreStatus')
+      .subscribe(
+        (res: HttpResponse<any>) => {
+          if (res.body.CODE === 200) {
+            this.isLoading = false;
+            this.getDataChemistry();
+          } else {
+            this.isLoading = false;
+            this.notify.error('Lỗi', res.body.MESSAGE);
+          }
+        },
+        () => {
+          console.error();
+          this.isLoading = false;
+          this.notify.error('Lỗi', 'Có lỗi xảy ra, vui lòng thử lại');
         }
-      },
-      () => {
-        console.error()
-        this.isLoading = false
-        this.notify.error('Lỗi', 'Có lỗi xảy ra, vui lòng thử lại')
-      }
-    )
+      );
   }
   openImportPopup() {
     const modalRef: NzModalRef = this.modal.create({
@@ -187,5 +191,51 @@ export class ImportChemistry implements OnInit {
 
   formatDate(date: any) {
     return date ? moment(date, 'YYYYMMDD').format('DD/MM/YYYY') : '';
+  }
+  exportToExcel() {
+    const title = `Đơn hàng Nhập chất hóa học từ ${moment(this.date[0]).format(
+      'DD/MM/YYYY'
+    )}-${moment(this.date[1]).format('DD/MM/YYYY')}`;
+    const header = [
+      'Tên Hóa học',
+      'Danh pháp',
+      'Ký hiệu',
+      'Số lượng',
+      'Hạn sử dụng',
+      'Ngày nhập',
+      'Trạng thái đơn',
+    ];
+    const startDate = moment(this.date[0]).format('YYYYMMDD');
+    const endDate = moment(this.date[1]).format('YYYYMMDD');
+    const name = 'CHEM_ORDER-' + startDate + '_' + endDate;
+    const data: any[] = [];
+    const column = [35, 35, 15, 15, 20, 25, 15];
+    const footer = 'F';
+    const align = ['left', 'left', 'left', 'left', 'left', 'left', 'left'];
+    this.listChemistry.forEach((item: any) => {
+      const entity = [
+        item.name,
+        item.nomenclature,
+        item.formula,
+        item.quantity,
+        moment(item.expirationDate, 'YYYYMMDD').format('DD/MM/YYYY'),
+        moment(item.orderAt, 'YYYYMMDDHHmmss').format('DD/MM/YYYY'),
+        item.orderStatus == 0
+          ? 'Đang chờ'
+          : item.orderStatus == 1
+          ? 'Đã nhận'
+          : 'Hủy',
+      ];
+      data.push(entity);
+    });
+    this.excelService.generateExcel(
+      title,
+      header,
+      data,
+      name,
+      footer,
+      column,
+      align
+    );
   }
 }

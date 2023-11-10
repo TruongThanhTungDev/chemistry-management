@@ -32,7 +32,7 @@ export class AddMultipleChemistryByFile {
         name: item[1],
         nomenclature: item[2],
         formula: item[3],
-        quantity: item[4],
+        quantity: item[4] + item[9],
         expirationDate: item[5],
       }));
     });

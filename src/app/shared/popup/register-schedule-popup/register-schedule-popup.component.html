@@ -1,7 +1,7 @@
-<form nz-form [formGroup]="registerInformation">
-  <nz-spin [nzSpinning]="isLoading">
-    <div class="flex">
-      <div class="w-1/3 overflow-auto" style="height: 526px;">
+<nz-spin [nzSpinning]="isLoading">
+  <div class="flex">
+    <div class="w-1/3 overflow-auto" style="height: 526px;">
+      <form nz-form [formGroup]="registerInformation">
         <nz-form-item>
           <nz-form-control nzErrorTip="Vui lòng chọn thời gian thực hành!">
             <div class="text-branch font-bold">
@@ -70,36 +70,38 @@
             <input nz-input placeholder="Nhập nội dung mượn phòng" formControlName="description" />
           </nz-form-control>
         </nz-form-item>
-        <nz-form-item>
-          <nz-form-control nzErrorTip="Vui lòng chọn phòng thực hành!">
-            <div class="text-branch font-bold">
-              <i class="fa-solid fa-flask mr-1"></i>
-              Chọn chất hóa học
+      </form>
+      <div>
+        <div class="text-branch font-bold">
+          <i class="fa-solid fa-flask mr-1"></i>
+          Chọn chất hóa học
+        </div>
+        <div class="mb-3">
+          <div *ngFor="let item of listSelectChemisrty; index as i" class="grid grid-cols-2 gap-4 mb-3">
+            <div>
+              <nz-select nzShowSearch nzAllowClear class="w-full" [(ngModel)]="item.code"
+                nzNotFoundContent="Không có chất hóa học nào" (ngModelChange)="changeSelectedChemistry($event, i)">
+                <nz-option *ngFor="let chem of listChemistry" [nzLabel]="chem.fullName"
+                  [nzValue]="chem.code" [nzDisabled]="disableItemSelect(chem.code)"></nz-option>
+              </nz-select>
             </div>
-            <div class="mb-3">
-              <div *ngFor="let item of listSelectChemisrty" class="grid grid-cols-2 gap-4 mb-3">
-                <div>
-                  <nz-select nzShowSearch nzAllowClear class="w-full" [(ngModel)]="item.code"
-                    nzNotFoundContent="Không có chất hóa học nào">
-                    <nz-option *ngFor="let item of listChemistry" [nzLabel]="item.fullName" [nzValue]="item.code"></nz-option>
-                  </nz-select>
-                </div>
-                <div class="flex items-center">
-                  <input nz-input [(ngModel)]="item.quantity" type="number" min="0"/>
-                  <div>{{item.unit}}</div>
-                </div>
-              </div>
+            <div class="flex items-center">
+              <input nz-input [(ngModel)]="item.quantity" type="number" min="0" />
+              <div class="ml-3">{{item.unit}}</div>
+              <button nz-button (click)="removeSelectedChemistry(i)">
+                <i class="fa-solid fa-minus"></i>
+              </button>
             </div>
-            <button nz-button class="btn-success" (click)="addNewChooseChemistry()">
-              <i class="fa fa-plus"></i>
-            </button>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-      <div class="w-2/3 pl-5 overflow-auto" style="height: 526px;">
-        <mwl-calendar-day-view [viewDate]="viewDate" [events]="events">
-        </mwl-calendar-day-view>
+          </div>
+        </div>
+        <button nz-button class="btn-success" (click)="addNewChooseChemistry()">
+          <i class="fa fa-plus"></i>
+        </button>
       </div>
     </div>
-  </nz-spin>
-</form>
+    <div class="w-2/3 pl-5 overflow-auto" style="height: 526px;">
+      <mwl-calendar-day-view [viewDate]="viewDate" [events]="events">
+      </mwl-calendar-day-view>
+    </div>
+  </div>
+</nz-spin>

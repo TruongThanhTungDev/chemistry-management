@@ -14,6 +14,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { ChemistryManagement } from "../pages/chemistry-management/chemistry-management.component";
 import { ImportChemistry } from "../pages/import-chemistry/import-chemistry.component";
 import { RegisterSchedule } from "../pages/register-schedule/register-schedule.component";
+import { ExcelService } from "../shared/utils/export-excel.service";
 @NgModule({
   imports: [
     CommonModule,
@@ -29,6 +30,6 @@ import { RegisterSchedule } from "../pages/register-schedule/register-schedule.c
     NzDatePickerModule,
   ],
   declarations: [ChemistryManagement, ImportChemistry, RegisterSchedule],
-  providers: [],
+  providers: [ExcelService],
 })
 export class LayoutModule {}

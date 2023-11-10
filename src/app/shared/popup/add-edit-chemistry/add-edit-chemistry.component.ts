@@ -39,7 +39,7 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     if (this.isEdit) {
       this.basicInfo.basicInformation.patchValue({
-        code: this.data.code ? this.data.code : '',
+        code: this.data.code,
         name: this.data.name,
         chemiscalType: this.data.chemiscalType,
         quantity: this.data.quantity,
@@ -52,7 +52,8 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
         barcode: this.data.barcode,
         orderStatus: this.data.orderStatus,
         isAdded: this.data.isAdded,
-        unit: this.data.unit
+        unit: this.data.unit,
+        orderAt: this.data.orderAt,
       });
       this.otherInfo.otherInfo.bondStructure = this.data.bondStructure;
       this.otherInfo.otherInfo.chemicalProperties =
@@ -80,6 +81,11 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
     return new Promise((resolve: any, reject: any) => {
       if (!this.basicInfo.validateForm()) {
         this.notify.warning('Cảnh báo', 'Vui lòng nhập đầy đủ các trường');
+        resolve({
+          body: {
+            CODE: false
+          }
+        })
         return;
       }
       const payload = {
@@ -93,6 +99,11 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
         quantity: parseInt(this.basicInfo.basicInformation.value.quantity),
         ...this.otherInfo.otherInfo,
         numberOfMoles: parseFloat(this.otherInfo.otherInfo.numberOfMoles),
+        storageStatus:
+          this.basicInfo.basicInformation.value.quantity &&
+          parseInt(this.basicInfo.basicInformation.value.quantity)
+            ? true
+            : false,
       };
       this.isLoading = true;
       if (!this.isEdit) {
@@ -122,7 +133,7 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
           );
       } else {
         payload.id = this.data.id
-        payload.status = this.data.status;
+        payload.orderStatus = this.data.orderStatus;
         payload.orderAt = this.data.orderAt
         this.service
           .put(this.REQUEST_URL, payload, `${OPERATIONS.UPDATE}?id=${this.data.id}`)
