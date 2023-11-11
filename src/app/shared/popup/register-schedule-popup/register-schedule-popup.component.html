@@ -8,7 +8,7 @@
               <i class="fa-solid fa-clock mr-1"></i>
               Thời gian
             </div>
-            <nz-date-picker formControlName="date" nzFormat="dd/MM/yyyy" class="w-full"
+            <nz-date-picker formControlName="datetime" nzFormat="dd/MM/yyyy" class="w-full"
               (ngModelChange)="onCalendarChange($event)"></nz-date-picker>
           </nz-form-control>
         </nz-form-item>
@@ -19,7 +19,7 @@
                 <i class="fa-solid fa-location-crosshairs mr-1"></i>
                 Lớp
               </div>
-              <input nz-input placeholder="Nhập tên lớp" formControlName="className" />
+              <input nz-input placeholder="Nhập tên lớp" formControlName="className" (ngModelChange)="showDateInCalendar()"/>
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>
@@ -50,12 +50,12 @@
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-control nzErrorTip="Vui lòng chọn phòng thực hành!">
+          <nz-form-control nzErrorTip="Vui lòng chọn người quản lý!">
             <div class="text-branch font-bold">
               <i class="fa-solid fa-user mr-1"></i>
               Người quản lý
             </div>
-            <nz-select nzShowSearch nzAllowClear formControlName="room" class="w-full"
+            <nz-select nzShowSearch nzAllowClear formControlName="managerId" class="w-full"
               nzNotFoundContent="Không có thông tin người quản lý">
               <nz-option *ngFor="let item of listManager" [nzLabel]="item.fullName" [nzValue]="item.id"></nz-option>
             </nz-select>
@@ -67,7 +67,7 @@
               <i class="fa-solid fa-note-sticky mr-1"></i>
               Nội dung
             </div>
-            <input nz-input placeholder="Nhập nội dung mượn phòng" formControlName="description" />
+            <input nz-input placeholder="Nhập nội dung mượn phòng" formControlName="description" (ngModelChange)="showDateInCalendar()"/>
           </nz-form-control>
         </nz-form-item>
       </form>
@@ -87,8 +87,8 @@
             </div>
             <div class="flex items-center">
               <input nz-input [(ngModel)]="item.quantity" type="number" min="0" />
-              <div class="ml-3">{{item.unit}}</div>
-              <button nz-button (click)="removeSelectedChemistry(i)">
+              <div class="mx-3">{{item.unit}}</div>
+              <button nz-button nzDanger (click)="removeSelectedChemistry(i)">
                 <i class="fa-solid fa-minus"></i>
               </button>
             </div>

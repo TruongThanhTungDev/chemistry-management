@@ -8,8 +8,8 @@
   </div>
   <div style="height: calc(100% - 224px);">
     <div class="mt-8">
-      <div>
-        <div *ngFor="let item of menu" class="relative flex items-center my-5 ml-7 text-cetner cursor-pointer" [routerLink]="[item.path]" routerLinkActive="active"  [routerLinkActiveOptions]="{ exact: true }">
+      <div *ngFor="let item of menu">
+        <div *ngIf="item.permission.includes(infoUser.role)" class="relative flex items-center my-5 ml-7 text-cetner cursor-pointer" [routerLink]="[item.path]" routerLinkActive="active"  [routerLinkActiveOptions]="{ exact: true }">
           <i class="text-24px text-center" [class]="item.icon" style="width: 40px;"></i>
           <div class="ml-3">{{item.name}}</div>
         </div>

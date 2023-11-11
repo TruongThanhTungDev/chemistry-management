@@ -49,6 +49,13 @@ export class OtherInformationChemistry implements OnInit, AfterViewInit {
     toolbarPosition: 'top',
     toolbarHiddenButtons: [['bold', 'italic'], ['fontSize']],
   };
+  infoUser: any;
+  constructor() {
+    this.infoUser = JSON.parse(localStorage.getItem('infoUser') as any);
+  }
+  get isStudent() {
+    return this.infoUser && this.infoUser.role === 'student';
+  }
   ngOnInit(): void {}
   ngAfterViewInit(): void {}
   onImageSelected(event: any) {
@@ -61,6 +68,6 @@ export class OtherInformationChemistry implements OnInit, AfterViewInit {
   }
   _handleReaderLoaded(e: any) {
     const reader = e.target;
-    this.otherInfo.bondStructure = reader.result
+    this.otherInfo.bondStructure = reader.result;
   }
 }

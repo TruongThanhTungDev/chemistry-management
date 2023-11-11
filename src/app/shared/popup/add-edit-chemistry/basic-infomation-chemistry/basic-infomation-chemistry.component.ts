@@ -15,10 +15,12 @@ export class BasicInformationChemistry {
   basicInformation: FormGroup;
   image: any;
   listChemiscalType: any[] = [];
+  infoUser: any
   constructor(
     private formBuilder: FormBuilder,
     private notify: NotificationService
   ) {
+    this.infoUser = JSON.parse(localStorage.getItem('infoUser') as any);
     this.basicInformation = this.formBuilder.group({
       code: [''],
       name: ['', [Validators.required]],
@@ -37,12 +39,15 @@ export class BasicInformationChemistry {
       orderAt: ['']
     });
   }
-  changeStorageStatus(type: boolean) {
+  get isStudent() {
+    return this.infoUser && this.infoUser.role === 'student'
+  }
+  changeStorageStatus(type: string) {
     this.basicInformation.patchValue({
       storageStatus: type,
     });
   }
-  changeUsingStatus(type: boolean) {
+  changeUsingStatus(type: string) {
     this.basicInformation.patchValue({
       usingStatus: type,
     });

@@ -1,8 +1,8 @@
-import { Component, Input, inject, OnInit } from '@angular/core';
+import { Component, Input, inject, OnInit, AfterViewInit } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
 import { addHours, endOfDay, startOfDay } from 'date-fns';
 import * as moment from 'moment';
-import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
+import { NZ_MODAL_DATA, NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import {
   FormControl,
   FormGroup,
@@ -18,7 +18,7 @@ import { HttpResponse } from '@angular/common/http';
   templateUrl: './register-schedule-popup.component.html',
   styleUrls: ['register-schedule-popup.component.scss'],
 })
-export class RegisterSchedulePopup implements OnInit {
+export class RegisterSchedulePopup implements OnInit, AfterViewInit {
   readonly #modal = inject(NzModalRef);
   readonly nzModalData = inject(NZ_MODAL_DATA);
   @Input() data: any;
@@ -49,80 +49,89 @@ export class RegisterSchedulePopup implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private notify: NotificationService,
-    private service: ApiServices
-  ) {
-    if (!this.isEdit) {
-      this.registerInformation = this.formBuilder.group({
-        date: [new Date(), [Validators.required]],
-        className: ['', [Validators.required]],
-        room: ['', [Validators.required]],
-        startTime: [new Date().setHours(9, 0, 0), [Validators.required]],
-        endTime: [new Date().setHours(10, 0, 0), [Validators.required]],
-        description: [''],
-      });
-      this.viewDate = this.registerInformation.value.date;
-      const payload = {
-        start: this.registerInformation.value.startTime,
-        end: this.registerInformation.value.endTime
-          ? this.registerInformation.value.endTime
-          : endOfDay(new Date()),
-        title:
-          this.registerInformation.value.className +
-          ' ' +
-          this.registerInformation.value.description,
-      };
-      this.events.push(payload);
-    }
-  }
+    private service: ApiServices,
+    private modal: NzModalService
+
+  ) {}
 
   ngOnInit(): void {
     this.getAllLaboratory();
     this.getAllManager();
     this.getAllChemistry();
+    if (!this.isEdit) {
+      this.registerInformation = this.formBuilder.group({
+        datetime: [new Date(), [Validators.required]],
+        className: ['', [Validators.required]],
+        room: ['', [Validators.required]],
+        startTime: [new Date().setHours(0, 0, 0), [Validators.required]],
+        endTime: [new Date().setHours(1, 0, 0), [Validators.required]],
+        description: [''],
+        managerId: ['', [Validators.required]],
+      });
+      this.viewDate = this.registerInformation.value.datetime;
+      const payload = {
+        start: new Date(this.registerInformation.value.startTime),
+        end: new Date(
+          this.registerInformation.value.endTime
+            ? this.registerInformation.value.endTime
+            : endOfDay(new Date())
+        ),
+        title:
+          this.registerInformation.value.className +
+          ' ' +
+          this.registerInformation.value.description,
+      };
+      this.events = [...this.events, payload];
+    }
   }
 
+  ngAfterViewInit(): void {}
+
   changeStartTime(event: any) {
-    this.events.pop()
+    this.events.pop();
     const payload = {
-      start: event,
-      end: this.registerInformation.value.endTime,
+      start: new Date(event),
+      end: new Date(this.registerInformation.value.endTime),
       title:
         this.registerInformation.value.className +
         ' ' +
         this.registerInformation.value.description,
     };
-    this.events.push(payload);
+    this.events = [...this.events, payload];
   }
   changeEndTime(event: any) {
     this.events.pop();
     const payload = {
-      start: this.registerInformation.value.startTime,
-      end: event,
+      start: new Date(this.registerInformation.value.startTime),
+      end: new Date(event),
       title:
         this.registerInformation.value.className +
         ' ' +
         this.registerInformation.value.description,
     };
-    this.events.push(payload)
+    this.events = [...this.events, payload];
   }
   onCalendarChange(event: any) {
     this.events.pop();
     const day = parseInt(moment(event).format('YYYYMMDD'));
     this.registerInformation.patchValue({
-      date: new Date(event),
-      startTime: new Date(event).setHours(9, 0, 0),
-      endTime: new Date(event).setHours(10, 0, 0),
+      datetime: new Date(event),
+      startTime: new Date(event).setHours(0, 0, 0),
+      endTime: new Date(event).setHours(1, 0, 0),
     });
+    this.getCalendarOfDay(day);
+  }
+  showDateInCalendar() {
+    this.events.pop();
     const payload = {
-      start: event,
-      end: this.registerInformation.value.endTime,
+      start: new Date(this.registerInformation.value.startTime),
+      end: new Date(this.registerInformation.value.endTime),
       title:
         this.registerInformation.value.className +
         ' ' +
         this.registerInformation.value.description,
     };
-    this.events.push(payload)
-    this.getCalendarOfDay(day);
+    this.events = [...this.events, payload];
   }
   getCalendarOfDay(day: any) {
     this.isLoading = true;
@@ -134,6 +143,15 @@ export class RegisterSchedulePopup implements OnInit {
         (res: HttpResponse<any>) => {
           if (res.body.CODE === 200) {
             this.isLoading = false;
+            const payload = {
+              start: new Date(this.registerInformation.value.startTime),
+              end: new Date(this.registerInformation.value.endTime),
+              title:
+                this.registerInformation.value.className +
+                ' ' +
+                this.registerInformation.value.description,
+            };
+            this.events = [...this.events, payload];
           }
         },
         () => {
@@ -210,19 +228,54 @@ export class RegisterSchedulePopup implements OnInit {
     this.listSelectChemisrty.push(newItem);
   }
   changeSelectedChemistry(event: any, index: any) {
-    const result = this.listChemistry.find((item: any) => item.code === event)
+    const result = this.listChemistry.find((item: any) => item.code === event);
     if (result) {
       this.listSelectChemisrty[index].unit = result.unit;
     }
   }
   disableItemSelect(item: any) {
     const arr = this.listSelectChemisrty.map((item: any) => item.code);
-    return arr.includes(item)
+    return arr.includes(item);
   }
   removeSelectedChemistry(index: any) {
     if (this.listSelectChemisrty.length === 1) {
-      return
+      return;
     }
-    this.listSelectChemisrty.splice(index,1)
+    this.listSelectChemisrty.splice(index, 1);
   }
+  saveRegisterSchedule() {
+    const payload = {};
+    this.service
+      .post(
+        `${this.REQUEST_URL}/checkDuplicateSchedule?endTime=&startTime=`,
+        ''
+      )
+      .subscribe(
+        (res: HttpResponse<any>) => {
+          if (res.body.CODE === 200) {
+            this.handleSaving();
+          } else {
+            this.checkingDuplicate();
+          }
+        },
+        () => {
+          console.error();
+        }
+      );
+  }
+  checkingDuplicate() {
+    this.modal.create({
+      nzTitle: 'Trùng lịch!',
+      nzContent:
+        '<div class="text-center">Lịch hiện tại đang chọn đã bị trùng, bạn có muốn tiếp tục không?</div>',
+      nzCentered: true,
+      nzOkText: 'Lưu',
+      nzCancelText: 'Hủy',
+      nzOkType: 'primary',
+      nzOnOk: () => {
+        this.handleSaving();
+      },
+    });
+  }
+  handleSaving() {}
 }

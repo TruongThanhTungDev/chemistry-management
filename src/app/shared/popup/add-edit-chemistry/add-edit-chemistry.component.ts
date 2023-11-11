@@ -28,14 +28,17 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
   readonly #addModal = inject(NzModalRef);
   readonly nzModalData = inject(NZ_MODAL_DATA);
   isLoading = false;
-
+  infoUser: any;
   constructor(
     private notify: NotificationService,
     private service: ApiServices
-  ) {}
-
-  ngOnInit() {
+  ) {
+    this.infoUser = JSON.parse(localStorage.getItem('infoUser') as any);
   }
+  get isStudent() {
+    return this.infoUser && this.infoUser.role === 'student';
+  }
+  ngOnInit() {}
   ngAfterViewInit() {
     if (this.isEdit) {
       this.basicInfo.basicInformation.patchValue({
@@ -67,14 +70,14 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
   }
   getListChemiscalType() {
     this.isLoading = true;
-    this.service.get(`${this.REQUEST_CHEMISCAL_TYPE_URL}/getAll`).subscribe(
-      (res: HttpResponse<any>) => {
+    this.service
+      .get(`${this.REQUEST_CHEMISCAL_TYPE_URL}/getAll`)
+      .subscribe((res: HttpResponse<any>) => {
         if (res.body.CODE === 200) {
-          this.isLoading = false
-          this.basicInfo.listChemiscalType = res.body.RESULT
+          this.isLoading = false;
+          this.basicInfo.listChemiscalType = res.body.RESULT;
         }
-      }
-    )
+      });
   }
 
   saveInformation() {
@@ -83,9 +86,9 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
         this.notify.warning('Cảnh báo', 'Vui lòng nhập đầy đủ các trường');
         resolve({
           body: {
-            CODE: false
-          }
-        })
+            CODE: false,
+          },
+        });
         return;
       }
       const payload = {
@@ -99,11 +102,6 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
         quantity: parseInt(this.basicInfo.basicInformation.value.quantity),
         ...this.otherInfo.otherInfo,
         numberOfMoles: parseFloat(this.otherInfo.otherInfo.numberOfMoles),
-        storageStatus:
-          this.basicInfo.basicInformation.value.quantity &&
-          parseInt(this.basicInfo.basicInformation.value.quantity)
-            ? true
-            : false,
       };
       this.isLoading = true;
       if (!this.isEdit) {
@@ -132,11 +130,15 @@ export class AddEditChemistryComponent implements OnInit, AfterViewInit {
             }
           );
       } else {
-        payload.id = this.data.id
+        payload.id = this.data.id;
         payload.orderStatus = this.data.orderStatus;
-        payload.orderAt = this.data.orderAt
+        payload.orderAt = this.data.orderAt;
         this.service
-          .put(this.REQUEST_URL, payload, `${OPERATIONS.UPDATE}?id=${this.data.id}`)
+          .put(
+            this.REQUEST_URL,
+            payload,
+            `${OPERATIONS.UPDATE}?id=${this.data.id}`
+          )
           .subscribe(
             (res: HttpResponse<any>) => {
               if (res.body.CODE === 200) {

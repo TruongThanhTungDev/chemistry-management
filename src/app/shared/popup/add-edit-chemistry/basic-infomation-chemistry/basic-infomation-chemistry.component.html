@@ -1,13 +1,23 @@
 <form nz-form class="grid grid-cols-2 gap-4" [formGroup]="basicInformation">
   <div>
     <div class="relative w-full h-400px">
-      <label for="upload-file" class="cursor-pointer">
-        <div *ngIf="!basicInformation.value.image" class="w-518px py-180px text-center border-branch border border-dashed">
-          <i class="fa-solid fa-camera text-branch text-56px"></i>
-        </div>
-        <img *ngIf="basicInformation.value.image" [src]="basicInformation.value.image" alt="Hình ảnh chất hóa học" class="w-full h-full" style="object-fit: cover;">
-      </label>
-      <input type="file" accept="image/*" class="opacity-0 absolute top-0" id="upload-file" (change)="onImageSelected($event)"/>
+      <div *ngIf="!isStudent">
+        <label for="upload-file" class="cursor-pointer">
+          <div *ngIf="!basicInformation.value.image" class="w-518px py-180px text-center border-branch border border-dashed">
+            <i class="fa-solid fa-camera text-branch text-56px"></i>
+          </div>
+          <img *ngIf="basicInformation.value.image" [src]="basicInformation.value.image" alt="Hình ảnh chất hóa học"
+            class="w-full h-full" style="object-fit: cover;">
+        </label>
+        <input type="file" accept="image/*" class="opacity-0 absolute top-0" id="upload-file"
+          (change)="onImageSelected($event)" />
+      </div>
+      <div *ngIf="isStudent">
+        <img *ngIf="basicInformation.value.image" [src]="basicInformation.value.image" alt="Hình ảnh chất hóa học"
+          class="w-full h-full" style="object-fit: cover;">
+        <img *ngIf="!basicInformation.value.image" src="../../../../../assets/image/bang-tuan-hoan-la-gi-1.png" alt="Hình ảnh chất hóa học"
+          class="w-full h-full" style="object-fit: cover;">
+      </div>
       <div class="text-center font-bold">Hình ảnh chất hóa học</div>
     </div>
   </div>
@@ -26,7 +36,10 @@
             <i class="fa-solid fa-vial mr-1"></i>
             Tên chất hóa học
           </div>
-          <input type="text" nz-input class="w-full custom-input" formControlName="name">
+          <input  *ngIf="!isStudent" type="text" nz-input class="w-full custom-input" formControlName="name">
+          <div *ngIf="isStudent" class="border-b border-b-black">
+            {{basicInformation.value.name}}
+          </div>
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -37,7 +50,10 @@
             <i class="fa-solid fa-vial mr-1"></i>
             Ký hiệu hóa học
           </div>
-          <input type="text" nz-input class="w-full custom-input" formControlName="formula">
+          <input *ngIf="!isStudent" type="text" nz-input class="w-full custom-input" formControlName="formula">
+          <div *ngIf="isStudent" class="border-b border-b-black">
+            {{basicInformation.value.formula}}
+          </div>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
@@ -46,9 +62,12 @@
             <i class="fa-solid fa-vial mr-1"></i>
             Loại chất
           </div>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Chọn loại chất" formControlName="chemiscalType">
+          <nz-select *ngIf="!isStudent" nzShowSearch nzAllowClear nzPlaceHolder="Chọn loại chất" formControlName="chemiscalType">
             <nz-option *ngFor="let item of listChemiscalType" [nzLabel]="item.name" [nzValue]="item.name"></nz-option>
           </nz-select>
+          <div *ngIf="isStudent" class="border-b border-b-black">
+            {{basicInformation.value.chemiscalType}}
+          </div>
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -59,11 +78,14 @@
             <i class="fa-solid fa-book mr-1"></i>
             Danh pháp
           </div>
-          <input type="text" nz-input class="w-full custom-input" formControlName="nomenclature">
+          <input *ngIf="!isStudent" type="text" nz-input class="w-full custom-input" formControlName="nomenclature">
+          <div *ngIf="isStudent" class="border-b border-b-black">
+            {{basicInformation.value.nomenclature}}
+          </div>
         </nz-form-control>
       </nz-form-item>
     </div>
-    <div class="grid grid-cols-2 gap-6">
+    <div class="grid grid-cols-2 gap-6" *ngIf="!isStudent">
       <nz-form-item>
         <nz-form-control nzErrorTip="Vui lòng nhập Số lượng và Đơn vị!">
           <div class="grid grid-cols-2 gap-4">
@@ -94,21 +116,21 @@
         </nz-form-control>
       </nz-form-item>
     </div>
-    <div class="grid grid-cols-2 gap-6">
+    <div class="grid grid-cols-2 gap-6" *ngIf="!isStudent">
       <div>
         <div class="text-branch font-bold">
           <i class="fa-solid fa-hashtag mr-1"></i>
           Tình trạng lưu trữ
         </div>
         <div class="text-center mt-3">
-          <button nz-dropdown [nzDropdownMenu]="menu1" class="text-white py-1 px-60px border rounded-lg" nzTrigger="click" [class]="basicInformation.value.storageStatus ? 'bg-blue-600' : 'bg-red-600'">
-            {{basicInformation.value.storageStatus ? 'Còn' : 'Hết'}}
+          <button nz-dropdown [nzDropdownMenu]="menu1" class="text-white py-1 px-60px border rounded-lg" nzTrigger="click" [class]="basicInformation.value.storageStatus === 'true' ? 'bg-blue-600' : 'bg-red-600'">
+            {{basicInformation.value.storageStatus === 'true' ? 'Còn' : 'Hết'}}
           </button>
         </div>
         <nz-dropdown-menu #menu1="nzDropdownMenu">
           <ul nz-menu>
-            <li nz-menu-item (click)="changeStorageStatus(true)">Còn</li>
-            <li nz-menu-item (click)="changeStorageStatus(false)">Hết</li>
+            <li nz-menu-item (click)="changeStorageStatus('true')">Còn</li>
+            <li nz-menu-item (click)="changeStorageStatus('false')">Hết</li>
           </ul>
         </nz-dropdown-menu>
       </div>
@@ -118,15 +140,15 @@
           Tình trạng sử dụng
         </div>
         <div class="text-center mt-3">
-          <button nz-dropdown [nzDropdownMenu]="menu2" class="text-white py-1 px-60px border rounded-lg" [class]="basicInformation.value.usingStatus ? 'bg-blue-600' : 'bg-red-600'"
+          <button nz-dropdown [nzDropdownMenu]="menu2" class="text-white py-1 px-60px border rounded-lg" [class]="basicInformation.value.usingStatus === 'true' ? 'bg-blue-600' : 'bg-red-600'"
             nzTrigger="click">
-            {{basicInformation.value.usingStatus ? 'Chưa hết hạn' : 'Hết hạn'}}
+            {{basicInformation.value.usingStatus === 'true' ? 'Chưa hết hạn' : 'Hết hạn'}}
           </button>
         </div>
         <nz-dropdown-menu #menu2="nzDropdownMenu">
           <ul nz-menu>
-            <li nz-menu-item (click)="changeUsingStatus(true)">Chưa hết hạn</li>
-            <li nz-menu-item (click)="changeUsingStatus(false)">Hết hạn</li>
+            <li nz-menu-item (click)="changeUsingStatus('true')">Chưa hết hạn</li>
+            <li nz-menu-item (click)="changeUsingStatus('false')">Hết hạn</li>
           </ul>
         </nz-dropdown-menu>
       </div>

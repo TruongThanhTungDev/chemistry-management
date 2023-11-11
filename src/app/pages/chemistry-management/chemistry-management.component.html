@@ -14,18 +14,18 @@
               (click)="clearData()"></span>
           </ng-template>
         </div>
-        <div>
+        <div *ngIf="!isStudent">
           <button nz-button nzType="primary" (click)="openBarcodeScannerModal()">
             <i class="fa-solid fa-barcode mr-1"></i>
             Quét
           </button>
-          <button nz-button (click)="exportToExcel()" class="ml-2">
+          <button nz-button (click)="getListexportToExcel()" class="ml-2">
             <i class="fa-solid fa-print mr-1"></i>
             Xuất dữ liệu
           </button>
         </div>
       </div>
-      <div class="flex items-center justify-end">
+      <div *ngIf="!isStudent" class="flex items-center justify-end">
         <div class="mr-2">
           <button nz-button nz-dropdown [nzDropdownMenu]="menu" class="btn-success">
             <i class="fa-solid fa-plus mr-1"></i>
@@ -50,31 +50,31 @@
         [nzScroll]="{ x: '1200px', y: '400px'}" [nzShowPagination]="false">
         <thead>
           <tr>
-            <th class="min-w-200px">Mã chất</th>
+            <th *ngIf="!isStudent" class="min-w-200px">Mã chất</th>
             <th class="min-w-200px">Tên Hóa học</th>
             <th class="min-w-200px">Danh pháp</th>
             <th class="min-w-200px">Ký hiệu</th>
-            <th class="min-w-200px">Số lượng</th>
-            <th class="min-w-200px">Hạn sử dụng</th>
-            <th class="min-w-250px">Tình trạng lưu trữ</th>
-            <th class="min-w-250px">Tình trạng sử dụng</th>
+            <th *ngIf="!isStudent" class="min-w-200px">Số lượng</th>
+            <th *ngIf="!isStudent" class="min-w-200px">Hạn sử dụng</th>
+            <th *ngIf="!isStudent" class="min-w-250px">Tình trạng lưu trữ</th>
+            <th *ngIf="!isStudent" class="min-w-250px">Tình trạng sử dụng</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of tableChemistry.data" (dblclick)="editChemistry(item)" (click)="selectRow(item)" [class]="rowSelected && item.id === rowSelected.id ? 'bg-branch text-white' : ''">
-            <td>{{item.code}}</td>
+            <td *ngIf="!isStudent">{{item.code}}</td>
             <td>{{item.name}}</td>
             <td>{{item.nomenclature}}</td>
             <td>{{item.formula}}</td>
-            <td>{{item.quantity + ' ' + (item.unit ? item.unit : '')}}</td>
-            <td>{{formatDate(item.expirationDate)}}</td>
-            <td>
-              <div *ngIf="item.storageStatus" class="px-5 bg-blue-500 text-center text-white rounded">Còn</div>
-              <div *ngIf="!item.storageStatus" class="px-5 bg-red-500 text-center text-white rounded">Hết</div>
+            <td *ngIf="!isStudent">{{item.quantity + ' ' + (item.unit ? item.unit : '')}}</td>
+            <td *ngIf="!isStudent">{{formatDate(item.expirationDate)}}</td>
+            <td *ngIf="!isStudent">
+              <div *ngIf="item.storageStatus === 'true'" class="px-5 bg-blue-500 text-center text-white rounded">Còn</div>
+              <div *ngIf="item.storageStatus === 'false'" class="px-5 bg-red-500 text-center text-white rounded">Hết</div>
             </td>
-            <td>
-              <div *ngIf="item.usingStatus" class="px-5 bg-blue-500 text-center text-white rounded">Còn hạn</div>
-              <div *ngIf="!item.usingStatus" class="px-5 bg-red-500 text-center text-white rounded">Hết hạn</div>
+            <td *ngIf="!isStudent">
+              <div *ngIf="item.usingStatus === 'true'" class="px-5 bg-blue-500 text-center text-white rounded">Còn hạn</div>
+              <div *ngIf="item.usingStatus === 'false'" class="px-5 bg-red-500 text-center text-white rounded">Hết hạn</div>
             </td>
           </tr>
         </tbody>

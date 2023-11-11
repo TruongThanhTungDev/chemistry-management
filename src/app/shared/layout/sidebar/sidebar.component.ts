@@ -12,33 +12,31 @@ export class SidebarComponent implements OnInit {
       name: 'Quản lý chất hóa học',
       path: '',
       icon: 'fa-solid fa-flask',
-      permisstion: '',
+      permission: ['student', 'admin'],
     },
     {
       name: 'Nhập hàng',
       path: 'import-chemistry',
       icon: 'fa-solid fa-cart-arrow-down',
-      permisstion: '',
+      permission: ['admin'],
     },
     {
       name: 'Đăng ký thực hành',
       path: 'register-schedule',
       icon: 'fa-solid fa-person-circle-plus',
-      permisstion: '',
+      permission: ['teacher', 'admin'],
     },
     {
       name: 'Chat GPT',
       path: 'chat-gpt',
       icon: 'fa-brands fa-rocketchat',
-      permisstion: '',
+      permission: ['student', 'admin', 'teacher'],
     },
   ];
-  currentRouter: any
-  infoUser:any
-  constructor(private router: Router) {
-    
-  }
+  currentRouter: any;
+  infoUser: any;
+  constructor(private router: Router) {}
   ngOnInit(): void {
-    this.infoUser = JSON.parse(localStorage.getItem('infoUser') as any)
+    this.infoUser = JSON.parse(localStorage.getItem('infoUser') as any);
   }
 }

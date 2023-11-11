@@ -9,6 +9,7 @@ import { AddMultipleChemistryModal } from 'src/app/shared/popup/add-multiple-che
 import { BarcodeScanner } from 'src/app/shared/popup/barcode-scanner/barcode-scanner.component';
 import { PrintLablePopup } from 'src/app/shared/popup/print-label/print-label.component';
 import { DataService } from 'src/app/shared/utils/dataService';
+import { ExcelService } from 'src/app/shared/utils/export-excel.service';
 import { NotificationService } from 'src/app/shared/utils/toast.service';
 
 @Component({
@@ -29,14 +30,20 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
   totalItems = 0;
   chemiscalName: any;
   barcodeValue: any;
+  infoUser: any;
   constructor(
     private service: ApiServices,
     private notify: NotificationService,
     private modal: NzModalService,
     private viewContainerRef: ViewContainerRef,
-    private dataService: DataService
-  ) {}
-
+    private dataService: DataService,
+    private excelService: ExcelService
+  ) {
+    this.infoUser = JSON.parse(localStorage.getItem('infoUser') as any);
+  }
+  get isStudent() {
+    return this.infoUser && this.infoUser.role === 'student';
+  }
   ngOnInit(): void {
     this.getDataChemistry();
     this.dataService.data$.subscribe((data: any) => {
@@ -239,7 +246,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
         favoriteLibrary: 'angular',
         favoriteFramework: 'angular',
       },
-      nzFooter: [
+      nzFooter: !this.isStudent ? [
         {
           label: 'In nhãn Chất',
           type: 'primary',
@@ -264,7 +271,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
             }
           },
         },
-      ],
+      ] : [],
     });
     modalRef.componentInstance.data = item;
     modalRef.componentInstance.isEdit = true;
@@ -394,28 +401,84 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
     });
     modal.componentInstance.data = item;
   }
-  exportToExcel() {
-    let list = []
+  getListexportToExcel() {
+    let list = [];
     const payload = {
       page: 0,
       size: 99999,
       filter: this.filterAllData(),
-      sort: ['id', 'desc']
-    }
-    this.isLoading = true
+      sort: ['id', 'desc'],
+    };
+    this.isLoading = true;
     this.service.getOption(this.REQUEST_URL, payload, '/search').subscribe(
       (res: HttpResponse<any>) => {
         if (res.body.CODE === 200) {
-          this.isLoading = false
-          list = res.body.RESULT.content
+          this.isLoading = false;
+          list = res.body.RESULT.content;
+          this.exportToExcel(list);
         } else {
           this.isLoading = false;
         }
       },
       () => {
-        console.error()
-        this.isLoading = false
+        console.error();
+        this.isLoading = false;
       }
-    )
+    );
+  }
+  exportToExcel(list: any) {
+    const title = `Danh sách chất hóa học còn lại`;
+    const header = [
+      'Tên Hóa học',
+      'Danh pháp',
+      'Ký hiệu',
+      'Loại chất',
+      'Số lượng',
+      'Hạn sử dụng',
+      'Số mol',
+      'Tính chất vật lý',
+      'Tính chất hóa học',
+      'Trạng thái tự nhiên',
+    ];
+    const name = 'EXPORT_DANH SÁCH HÓA HỌC_' + moment().format('DDMMYYYY');
+    const data: any[] = [];
+    const column = [35, 35, 15, 20, 15, 20, 25, 45, 45, 45];
+    const footer = 'F';
+    const align = [
+      'left',
+      'left',
+      'left',
+      'left',
+      'left',
+      'left',
+      'left',
+      'left',
+      'left',
+      'left',
+    ];
+    this.listChemistry.forEach((item: any) => {
+      const entity = [
+        item.name,
+        item.nomenclature,
+        item.formula,
+        item.chemiscalType,
+        item.quantity + item.unit,
+        moment(item.expirationDate, 'YYYYMMDD').format('DD/MM/YYYY'),
+        item.numberOfMoles ? item.numberOfMoles : '',
+        item.physicalProperties,
+        item.chemicalProperties,
+        item.naturalStatus,
+      ];
+      data.push(entity);
+    });
+    this.excelService.generateExcel(
+      title,
+      header,
+      data,
+      name,
+      footer,
+      column,
+      align
+    );
   }
 }
