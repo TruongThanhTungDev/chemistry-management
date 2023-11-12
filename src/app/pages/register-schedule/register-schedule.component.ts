@@ -35,7 +35,9 @@ export class RegisterSchedule implements OnInit {
   ngOnInit() {
     this.getListRegisterSchedule();
   }
-
+  get isAdmin() {
+    return this.infoUser && this.infoUser.role === 'admin'
+  }
   getListRegisterSchedule() {
     const payload = {
       page: this.page - 1,
@@ -135,7 +137,7 @@ export class RegisterSchedule implements OnInit {
   }
   openEditRegisterSchedule(item: any) {
     const modalRef: NzModalRef = this.modal.create({
-      nzTitle: 'Sửa thông tin Đăng ký thực hành',
+      nzTitle: `${this.isAdmin ? 'Xem' : 'Sửa'} thông tin Đăng ký thực hành`,
       nzContent: RegisterSchedulePopup,
       nzViewContainerRef: this.viewContainerRef,
       nzWidth: '1100px',
@@ -147,25 +149,50 @@ export class RegisterSchedule implements OnInit {
         favoriteLibrary: 'angular',
         favoriteFramework: 'angular',
       },
-      nzFooter: [
-        {
-          label: 'Hủy',
-          onClick: () => modalRef.destroy(),
-        },
-        {
-          label: 'Lưu',
-          type: 'primary',
-          autoLoading: false,
-          onClick: async () => {
-            const ref = modalRef.getContentComponent() as RegisterSchedulePopup;
-            const res = (await ref.saveRegisterSchedule()) as HttpResponse<any>;
-            if (res.body.CODE === 200) {
-              this.page = 1;
-              this.getListRegisterSchedule();
-            }
-          },
-        },
-      ],
+      nzFooter: !this.isAdmin
+        ? [
+            {
+              label: 'Hủy',
+              onClick: () => modalRef.destroy(),
+            },
+            {
+              label: 'Lưu',
+              type: 'primary',
+              autoLoading: false,
+              onClick: async () => {
+                const ref =
+                  modalRef.getContentComponent() as RegisterSchedulePopup;
+                const res =
+                  (await ref.saveRegisterSchedule()) as HttpResponse<any>;
+                if (res.body.CODE === 200) {
+                  this.page = 1;
+                  this.getListRegisterSchedule();
+                }
+              },
+            },
+          ]
+        : [
+            {
+              label: 'Từ chối',
+              danger: true,
+              onClick: () => {
+                const ref =
+                  modalRef.getContentComponent() as RegisterSchedulePopup;
+                this.rowSelected = ref.data;
+                this.rejectRegisterSchedule();
+              },
+            },
+            {
+              label: 'Duyệt',
+              type: 'primary',
+              autoLoading: false,
+              onClick: () => {
+                const ref = modalRef.getContentComponent() as RegisterSchedulePopup
+                this.rowSelected = ref.data
+                this.acceptRegisterSchedule()
+              },
+            },
+          ],
     });
     modalRef.componentInstance.isEdit = true;
     modalRef.componentInstance.data = item;
@@ -203,6 +230,7 @@ export class RegisterSchedule implements OnInit {
                   ? 'Duyệt lịch thực hành thành công!'
                   : 'Đã từ chối lịch thực hành!'
               );
+              this.rowSelected = null
               this.getListRegisterSchedule();
             } else {
               this.isLoading = false;
@@ -256,6 +284,7 @@ export class RegisterSchedule implements OnInit {
             )) as HttpResponse<any>;
             if (res.body.CODE === 200) {
               modalRef.destroy();
+              this.rowSelected = null
             }
           },
         },

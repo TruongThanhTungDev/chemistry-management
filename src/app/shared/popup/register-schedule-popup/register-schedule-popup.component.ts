@@ -90,17 +90,23 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
         ],
         status: [this.data.status],
       });
-      this.listSelectChemisrty = JSON.parse(this.data.chemiscal)
+      this.listSelectChemisrty = JSON.parse(this.data.chemiscal);
     }
     this.viewDate = this.registerInformation.value.datetime;
     this.getAllLaboratory();
     this.getAllManager();
     this.getAllChemistry();
-    this.getCalendarOfDay(this.registerInformation.value.datetime, this.isEdit ? this.data.id : '');
+    this.getCalendarOfDay(
+      this.registerInformation.value.datetime,
+      this.isEdit ? this.data.id : ''
+    );
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
+  get isAdmin() {
+    return this.infoUser && this.infoUser.role === 'admin';
+  }
   changeStartTime(event: any) {
     this.events.pop();
     const payload = {
@@ -166,9 +172,11 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
         (res: HttpResponse<any>) => {
           if (res.body.CODE === 200) {
             this.isLoading = false;
-            const listSchedule = res.body.RESULT
+            const listSchedule = res.body.RESULT;
             if (this.isEdit) {
-              const currentTime = listSchedule.findIndex((item: any) => item.id === id);
+              const currentTime = listSchedule.findIndex(
+                (item: any) => item.id === id
+              );
               if (currentTime !== -1) {
                 listSchedule.splice(currentTime, 1);
               }
@@ -386,9 +394,13 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
           }
         );
     } else {
-      payload.id = this.data.id
+      payload.id = this.data.id;
       this.service
-        .put(this.REQUEST_URL, payload, `/updatePracticeSchedule?id=${this.data.id}`)
+        .put(
+          this.REQUEST_URL,
+          payload,
+          `/updatePracticeSchedule?id=${this.data.id}`
+        )
         .subscribe(
           (res: HttpResponse<any>) => {
             if (res.body.CODE === 200) {
@@ -422,19 +434,21 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
   }
   validateForm() {
     if (this.registerInformation && this.registerInformation.invalid) {
-      Object.values(this.registerInformation.controls).forEach((control: any) => {
-        if (control.invalid) {
-          control.markAsDirty();
-          control.updateValueAndValidity({ onlySelf: true });
+      Object.values(this.registerInformation.controls).forEach(
+        (control: any) => {
+          if (control.invalid) {
+            control.markAsDirty();
+            control.updateValueAndValidity({ onlySelf: true });
+          }
         }
-      });
+      );
       return false;
     } else {
       return true;
     }
   }
   getDateTime(date: number) {
-    const year = parseInt(date.toString().substring(0, 4), 10)
+    const year = parseInt(date.toString().substring(0, 4), 10);
     const month = parseInt(date.toString().substring(4, 6), 10) - 1;
     const day = parseInt(date.toString().substring(6, 8), 10);
     return new Date(year, month, day);
@@ -448,6 +462,16 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
       parseInt(time.toString().substring(10, 12), 10),
       parseInt(time.toString().substring(12, 14), 10)
     );
-    return dateTime
+    return dateTime;
+  }
+  formatDate(date: any) {
+    return date ? moment(date, 'YYYYMMDD').format('DD/MM/YYYY') : '';
+  }
+  formatHour(hour: any) {
+    return hour ? moment(hour, 'YYYYMMDDHHmmss').format('HH:mm') : '';
+  }
+  getNameChemistry(id:any) {
+    const result = this.listChemistry.find((item: any) => item.id === id)
+    return result ? `${result.fullName}` : ''
   }
 }

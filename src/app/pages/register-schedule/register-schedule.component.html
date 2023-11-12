@@ -3,12 +3,12 @@
     <div class="grid grid-cols-2 gap-2 items-center mb-3">
       <div>
         <nz-range-picker nzFormat="dd/MM/yyyy" [(ngModel)]="date" (ngModelChange)="filterDate($event)"></nz-range-picker>
-        <button nz-button class="btn-success ml-2" (click)="openRegisterPopup()">
+        <button nz-button class="btn-success ml-2" (click)="openRegisterPopup()" *ngIf="!isAdmin">
           <i class="fa fa-plus mr-1"></i>
           Đăng ký
         </button>
       </div>
-      <div class="flex items-center justify-end">
+      <div class="flex items-center justify-end" *ngIf="isAdmin">
         <button nz-button nzType="primary" class="mr-2" [disabled]="!rowSelected" (click)="acceptRegisterSchedule()">
           <i class="fa fa-check mr-1"></i>
           Duyệt

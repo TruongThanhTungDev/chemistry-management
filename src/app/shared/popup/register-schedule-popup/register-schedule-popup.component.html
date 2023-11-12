@@ -8,8 +8,11 @@
               <i class="fa-solid fa-clock mr-1"></i>
               Thời gian
             </div>
-            <nz-date-picker formControlName="datetime" nzFormat="dd/MM/yyyy" class="w-full"
+            <nz-date-picker *ngIf="!isAdmin" formControlName="datetime" nzFormat="dd/MM/yyyy" class="w-full"
               (ngModelChange)="onCalendarChange($event)"></nz-date-picker>
+            <div *ngIf="isAdmin" class="border-b border-b-black">
+              {{formatDate(registerInformation.value.datetime)}}
+            </div>
           </nz-form-control>
         </nz-form-item>
         <div class="grid grid-cols-2 gap-4">
@@ -19,7 +22,10 @@
                 <i class="fa-solid fa-location-crosshairs mr-1"></i>
                 Lớp
               </div>
-              <input nz-input placeholder="Nhập tên lớp" formControlName="className" (ngModelChange)="showDateInCalendar()"/>
+              <input nz-input *ngIf="!isAdmin" placeholder="Nhập tên lớp" formControlName="className" (ngModelChange)="showDateInCalendar()"/>
+              <div *ngIf="isAdmin" class="border-b border-b-black">
+                {{registerInformation.value.className}}
+              </div>
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>
@@ -28,10 +34,13 @@
                 <i class="fa-solid fa-location-crosshairs mr-1"></i>
                 Phòng
               </div>
-              <nz-select nzShowSearch nzAllowClear formControlName="laboratoryId" class="w-full"
+              <nz-select *ngIf="!isAdmin" nzShowSearch nzAllowClear formControlName="laboratoryId" class="w-full"
                 nzNotFoundContent="Không có phòng thực hành">
                 <nz-option *ngFor="let item of listLaboratory" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
               </nz-select>
+              <div *ngIf="isAdmin" class="border-b border-b-black">
+                {{data.laboratory ? data.laboratory.name : ''}}
+              </div>
             </nz-form-control>
           </nz-form-item>
         </div>
@@ -41,11 +50,19 @@
               <i class="fa-solid fa-clock mr-1"></i>
               Khung giờ
             </div>
-            <div class="grid grid-cols-2 gap-x-4">
+            <div *ngIf="!isAdmin" class="grid grid-cols-2 gap-x-4">
               <nz-time-picker formControlName="startTime" nzFormat="HH:mm"
                 (ngModelChange)="changeStartTime($event)"></nz-time-picker>
               <nz-time-picker formControlName="endTime" nzFormat="HH:mm"
                 (ngModelChange)="changeEndTime($event)"></nz-time-picker>
+            </div>
+            <div *ngIf="isAdmin" class="grid grid-cols-2 gap-x-4">
+              <div class="border-b border-b-black">
+                {{formatHour(data.startTime)}}
+              </div>
+              <div class="border-b border-b-black">
+                {{formatHour(data.endTime)}}
+              </div>
             </div>
           </nz-form-control>
         </nz-form-item>
@@ -55,10 +72,13 @@
               <i class="fa-solid fa-user mr-1"></i>
               Người quản lý
             </div>
-            <nz-select nzShowSearch nzAllowClear formControlName="managerId" class="w-full"
+            <nz-select *ngIf="!isAdmin" nzShowSearch nzAllowClear formControlName="managerId" class="w-full"
               nzNotFoundContent="Không có thông tin người quản lý">
               <nz-option *ngFor="let item of listManager" [nzLabel]="item.fullName" [nzValue]="item.id"></nz-option>
             </nz-select>
+            <div *ngIf="isAdmin" class="border-b border-b-black">
+              {{data.manager ? data.manager.fullName : ''}}
+            </div>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -67,16 +87,19 @@
               <i class="fa-solid fa-note-sticky mr-1"></i>
               Nội dung
             </div>
-            <input nz-input placeholder="Nhập nội dung mượn phòng" formControlName="description" (ngModelChange)="showDateInCalendar()"/>
+            <input *ngIf="!isAdmin" nz-input placeholder="Nhập nội dung mượn phòng" formControlName="description" (ngModelChange)="showDateInCalendar()"/>
+            <div *ngIf="isAdmin" class="border-b border-b-black">
+              {{registerInformation.value.description}}
+            </div>
           </nz-form-control>
         </nz-form-item>
       </form>
       <div>
         <div class="text-branch font-bold">
           <i class="fa-solid fa-flask mr-1"></i>
-          Chọn chất hóa học
+          {{isAdmin ? 'Các chất hóa học thực hành' : 'Chọn chất hóa học'}}
         </div>
-        <div class="mb-3">
+        <div *ngIf="!isAdmin" class="mb-3">
           <div *ngFor="let item of listSelectChemisrty; index as i" class="grid grid-cols-2 gap-4 mb-3">
             <div>
               <nz-select nzShowSearch nzAllowClear class="w-full" [(ngModel)]="item.id"
@@ -94,7 +117,12 @@
             </div>
           </div>
         </div>
-        <button nz-button class="btn-success" (click)="addNewChooseChemistry()">
+        <ul class="ml-5">
+          <li *ngFor="let item of listSelectChemisrty" class="list-disc">
+            {{getNameChemistry(item.id)}} - {{item.quantity}}{{item.unit}}
+          </li>
+        </ul>
+        <button *ngIf="!isAdmin" nz-button class="btn-success" (click)="addNewChooseChemistry()">
           <i class="fa fa-plus"></i>
         </button>
       </div>
