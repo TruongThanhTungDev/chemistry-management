@@ -28,9 +28,9 @@
                 <i class="fa-solid fa-location-crosshairs mr-1"></i>
                 Phòng
               </div>
-              <nz-select nzShowSearch nzAllowClear formControlName="room" class="w-full"
+              <nz-select nzShowSearch nzAllowClear formControlName="laboratoryId" class="w-full"
                 nzNotFoundContent="Không có phòng thực hành">
-                <nz-option *ngFor="let item of listLaboratory" [nzLabel]="item.name" [nzValue]="item.name"></nz-option>
+                <nz-option *ngFor="let item of listLaboratory" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
               </nz-select>
             </nz-form-control>
           </nz-form-item>
@@ -79,10 +79,10 @@
         <div class="mb-3">
           <div *ngFor="let item of listSelectChemisrty; index as i" class="grid grid-cols-2 gap-4 mb-3">
             <div>
-              <nz-select nzShowSearch nzAllowClear class="w-full" [(ngModel)]="item.code"
+              <nz-select nzShowSearch nzAllowClear class="w-full" [(ngModel)]="item.id"
                 nzNotFoundContent="Không có chất hóa học nào" (ngModelChange)="changeSelectedChemistry($event, i)">
                 <nz-option *ngFor="let chem of listChemistry" [nzLabel]="chem.fullName"
-                  [nzValue]="chem.code" [nzDisabled]="disableItemSelect(chem.code)"></nz-option>
+                  [nzValue]="chem.id" [nzDisabled]="disableItemSelect(chem.code)"></nz-option>
               </nz-select>
             </div>
             <div class="flex items-center">

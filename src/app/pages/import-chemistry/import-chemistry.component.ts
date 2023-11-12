@@ -181,6 +181,7 @@ export class ImportChemistry implements OnInit {
     }
   }
   changeDate(event: any) {
+    this.page = 1
     this.getDataChemistry();
   }
 

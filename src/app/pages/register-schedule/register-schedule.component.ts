@@ -5,6 +5,7 @@ import { ApiServices } from 'src/app/api.services';
 import { NotificationService } from 'src/app/shared/utils/toast.service';
 import { HttpResponse } from '@angular/common/http';
 import { RegisterSchedulePopup } from 'src/app/shared/popup/register-schedule-popup/register-schedule-popup.component';
+import { RejectRegisterSchedule } from 'src/app/shared/popup/reject-register-schedule/reject-register-schedule.component';
 @Component({
   selector: 'practice-register',
   templateUrl: './register-schedule.component.html',
@@ -17,7 +18,7 @@ export class RegisterSchedule implements OnInit {
     private modal: NzModalService,
     private viewContainerRef: ViewContainerRef
   ) {
-    this.infoUser = JSON.parse(localStorage.getItem('infoUser') as any)
+    this.infoUser = JSON.parse(localStorage.getItem('infoUser') as any);
   }
   REQUEST_URL = 'api/v1/practiceScheldule';
   isLoading = false;
@@ -27,7 +28,7 @@ export class RegisterSchedule implements OnInit {
   ];
   listResgiter: any[] = [];
   rowSelected: any;
-  infoUser: any
+  infoUser: any;
   page = 1;
   totalItems = 0;
   size = 10;
@@ -46,32 +47,44 @@ export class RegisterSchedule implements OnInit {
     this.service.getOption(this.REQUEST_URL, payload, '/search').subscribe(
       (res: HttpResponse<any>) => {
         if (res.body.CODE === 200) {
-          this.isLoading = false
-          this.listResgiter = res.body.RESULT.content
+          this.isLoading = false;
+          this.listResgiter = res.body.RESULT.content;
           this.totalItems = res.body.RESULT.totalElements;
         } else {
-          this.isLoading = false
-          this.notify.error('Lỗi', res.body.MESSAGE)
+          this.isLoading = false;
+          this.notify.error('Lỗi', res.body.MESSAGE);
         }
       },
       () => {
-        console.error()
-        this.isLoading = false
-        this.notify.error('Lỗi', 'Có lỗi khi lấy danh sách đăng ký thực hành!')
+        console.error();
+        this.isLoading = false;
+        this.notify.error('Lỗi', 'Có lỗi khi lấy danh sách đăng ký thực hành!');
       }
-    )
+    );
   }
   filterData() {
     const filter = [];
     filter.push('id>0');
-    const startDate = parseInt(moment(this.date[0]).format('YYYYMMDD000000'));
-    const endDate = parseInt(moment(this.date[1]).format('YYYYMMDD235959'));
+    const startDate = parseInt(moment(this.date[0]).format('YYYYMMDD'));
+    const endDate = parseInt(moment(this.date[1]).format('YYYYMMDD'));
+    filter.push(`datetime>=${startDate}`);
+    filter.push(`datetime<=${endDate}`);
     return filter.join(';');
   }
-  selectRow(item: any) {}
+  filterDate(event: any) {
+    this.page = 1
+    this.getListRegisterSchedule()
+  }
+  selectRow(item: any) {
+    if (this.rowSelected && this.rowSelected.id === item.id) {
+      this.rowSelected = null;
+    } else {
+      this.rowSelected = item;
+    }
+  }
   changePage(event: any) {
     this.page = event;
-    this.getListRegisterSchedule()
+    this.getListRegisterSchedule();
   }
   getStartOfWeek(d: any) {
     d = new Date(d);
@@ -107,11 +120,152 @@ export class RegisterSchedule implements OnInit {
         {
           label: 'Lưu',
           type: 'primary',
+          autoLoading: false,
           onClick: async () => {
-            
+            const ref = modalRef.getContentComponent() as RegisterSchedulePopup;
+            const res = (await ref.saveRegisterSchedule()) as HttpResponse<any>;
+            if (res.body.CODE === 200) {
+              this.page = 1;
+              this.getListRegisterSchedule();
+            }
           },
         },
       ],
     });
+  }
+  openEditRegisterSchedule(item: any) {
+    const modalRef: NzModalRef = this.modal.create({
+      nzTitle: 'Sửa thông tin Đăng ký thực hành',
+      nzContent: RegisterSchedulePopup,
+      nzViewContainerRef: this.viewContainerRef,
+      nzWidth: '1100px',
+      nzBodyStyle: {
+        height: '570px',
+      },
+      nzCentered: true,
+      nzData: {
+        favoriteLibrary: 'angular',
+        favoriteFramework: 'angular',
+      },
+      nzFooter: [
+        {
+          label: 'Hủy',
+          onClick: () => modalRef.destroy(),
+        },
+        {
+          label: 'Lưu',
+          type: 'primary',
+          autoLoading: false,
+          onClick: async () => {
+            const ref = modalRef.getContentComponent() as RegisterSchedulePopup;
+            const res = (await ref.saveRegisterSchedule()) as HttpResponse<any>;
+            if (res.body.CODE === 200) {
+              this.page = 1;
+              this.getListRegisterSchedule();
+            }
+          },
+        },
+      ],
+    });
+    modalRef.componentInstance.isEdit = true;
+    modalRef.componentInstance.data = item;
+  }
+  acceptRegisterSchedule() {
+    this.modal.create({
+      nzTitle: 'Duyệt Đơn đăng ký thực hành',
+      nzContent: '<div class="text-center">Duyệt lịch hóa học này?</div>',
+      nzCentered: true,
+      nzOkText: 'Duyệt',
+      nzCancelText: 'Hủy',
+      nzOkType: 'primary',
+      nzOnOk: () => {
+        this.handleAccept(1);
+      },
+    });
+  }
+  handleAccept(status: any, rejectReason = '') {
+    return new Promise((resolve: any, reject: any) => {
+      const payload = {
+        practiceSchelduleId: this.rowSelected.id,
+        status,
+        rejectReason,
+      };
+      this.isLoading = true;
+      this.service
+        .postOption(this.REQUEST_URL, payload, '/changeStatus')
+        .subscribe(
+          (res: HttpResponse<any>) => {
+            if (res.body.CODE === 200) {
+              this.isLoading = false;
+              this.notify.success(
+                'Thành công',
+                status === 1
+                  ? 'Duyệt lịch thực hành thành công!'
+                  : 'Đã từ chối lịch thực hành!'
+              );
+              this.getListRegisterSchedule();
+            } else {
+              this.isLoading = false;
+              this.notify.error(
+                'Lỗi',
+                status === 1
+                  ? 'Duyệt lịch thực hành thất bại!'
+                  : 'Từ chối thực hành thất bại!'
+              );
+            }
+            resolve(res);
+          },
+          (error) => {
+            reject(error);
+            console.error(error);
+            this.notify.error(
+              'Lỗi',
+              status === 1
+                ? 'Duyệt lịch thực hành thất bại!'
+                : 'Từ chối thực hành thất bại!'
+            );
+            this.isLoading = false;
+          }
+        );
+    });
+  }
+  rejectRegisterSchedule() {
+    const modalRef: NzModalRef = this.modal.create({
+      nzTitle: 'Lý do từ chối',
+      nzContent: RejectRegisterSchedule,
+      nzCentered: true,
+      nzData: {
+        favoriteLibrary: 'angular',
+        favoriteFramework: 'angular',
+      },
+      nzFooter: [
+        {
+          label: 'Hủy',
+          onClick: () => modalRef.destroy(),
+        },
+        {
+          label: 'Từ chối',
+          type: 'primary',
+          autoLoading: false,
+          onClick: async () => {
+            const ref =
+              modalRef.getContentComponent() as RejectRegisterSchedule;
+            const res = (await this.handleAccept(
+              2,
+              ref.rejectReason
+            )) as HttpResponse<any>;
+            if (res.body.CODE === 200) {
+              modalRef.destroy();
+            }
+          },
+        },
+      ],
+    });
+  }
+  formatDate(date: any) {
+    return date ? moment(date, 'YYYYMMDD').format('DD/MM/YYYY') : '';
+  }
+  formatHour(hour: any) {
+    return hour ? moment(hour, 'YYYYMMDDHHmmss').format('HH:mm') : '';
   }
 }

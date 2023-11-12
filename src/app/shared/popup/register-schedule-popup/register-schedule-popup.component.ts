@@ -1,6 +1,5 @@
 import { Component, Input, inject, OnInit, AfterViewInit } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { addHours, endOfDay, startOfDay } from 'date-fns';
 import * as moment from 'moment';
 import { NZ_MODAL_DATA, NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import {
@@ -38,54 +37,69 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
   listChemistry: any[] = [];
   listSelectChemisrty: any[] = [
     {
-      chemistryName: '',
-      code: '',
+      id: '',
       quantity: 0,
       unit: '',
     },
   ];
   isAddNewCalendar = false;
   selectedCalendar: any;
+  infoUser: any;
   constructor(
     private formBuilder: FormBuilder,
     private notify: NotificationService,
     private service: ApiServices,
     private modal: NzModalService
-
-  ) {}
+  ) {
+    this.infoUser = JSON.parse(localStorage.getItem('infoUser') as any);
+  }
 
   ngOnInit(): void {
-    this.getAllLaboratory();
-    this.getAllManager();
-    this.getAllChemistry();
     if (!this.isEdit) {
       this.registerInformation = this.formBuilder.group({
         datetime: [new Date(), [Validators.required]],
         className: ['', [Validators.required]],
-        room: ['', [Validators.required]],
+        laboratoryId: ['', [Validators.required]],
         startTime: [new Date().setHours(0, 0, 0), [Validators.required]],
         endTime: [new Date().setHours(1, 0, 0), [Validators.required]],
         description: [''],
         managerId: ['', [Validators.required]],
+        status: [0],
       });
-      this.viewDate = this.registerInformation.value.datetime;
-      const payload = {
-        start: new Date(this.registerInformation.value.startTime),
-        end: new Date(
-          this.registerInformation.value.endTime
-            ? this.registerInformation.value.endTime
-            : endOfDay(new Date())
-        ),
-        title:
-          this.registerInformation.value.className +
-          ' ' +
-          this.registerInformation.value.description,
-      };
-      this.events = [...this.events, payload];
+    } else {
+      const dateTimeData = this.getDateTime(this.data.datetime);
+      this.registerInformation = this.formBuilder.group({
+        datetime: [dateTimeData, [Validators.required]],
+        className: [this.data.className, [Validators.required]],
+        laboratoryId: [
+          this.data.laboratory ? this.data.laboratory.id : '',
+          [Validators.required],
+        ],
+        startTime: [
+          this.getTimeConvert(this.data.startTime),
+          [Validators.required],
+        ],
+        endTime: [
+          this.getTimeConvert(this.data.endTime),
+          [Validators.required],
+        ],
+        description: [this.data.description],
+        managerId: [
+          this.data.manager ? this.data.manager.id : '',
+          [Validators.required],
+        ],
+        status: [this.data.status],
+      });
+      this.listSelectChemisrty = JSON.parse(this.data.chemiscal)
     }
+    this.viewDate = this.registerInformation.value.datetime;
+    this.getAllLaboratory();
+    this.getAllManager();
+    this.getAllChemistry();
+    this.getCalendarOfDay(this.registerInformation.value.datetime, this.isEdit ? this.data.id : '');
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   changeStartTime(event: any) {
     this.events.pop();
@@ -96,6 +110,10 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
         this.registerInformation.value.className +
         ' ' +
         this.registerInformation.value.description,
+      color: {
+        primary: '#ad2121',
+        secondary: '#FAE3E3',
+      },
     };
     this.events = [...this.events, payload];
   }
@@ -108,18 +126,20 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
         this.registerInformation.value.className +
         ' ' +
         this.registerInformation.value.description,
+      color: {
+        primary: '#ad2121',
+        secondary: '#FAE3E3',
+      },
     };
     this.events = [...this.events, payload];
   }
   onCalendarChange(event: any) {
     this.events.pop();
-    const day = parseInt(moment(event).format('YYYYMMDD'));
     this.registerInformation.patchValue({
-      datetime: new Date(event),
       startTime: new Date(event).setHours(0, 0, 0),
       endTime: new Date(event).setHours(1, 0, 0),
     });
-    this.getCalendarOfDay(day);
+    this.getCalendarOfDay(event);
   }
   showDateInCalendar() {
     this.events.pop();
@@ -130,28 +150,51 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
         this.registerInformation.value.className +
         ' ' +
         this.registerInformation.value.description,
+      color: {
+        primary: '#ad2121',
+        secondary: '#FAE3E3',
+      },
     };
     this.events = [...this.events, payload];
   }
-  getCalendarOfDay(day: any) {
+  getCalendarOfDay(day: any, id = null) {
+    const datetime = parseInt(moment(day).format('YYYYMMDD'));
     this.isLoading = true;
     this.service
-      .get(
-        `${this.REQUEST_URL}/getPracticeScheldule?endTime=${day}&startTime=${day}`
-      )
+      .get(`${this.REQUEST_URL}/getPracticeScheldule?dateTime=${datetime}`)
       .subscribe(
         (res: HttpResponse<any>) => {
           if (res.body.CODE === 200) {
             this.isLoading = false;
+            const listSchedule = res.body.RESULT
+            if (this.isEdit) {
+              const currentTime = listSchedule.findIndex((item: any) => item.id === id);
+              if (currentTime !== -1) {
+                listSchedule.splice(currentTime, 1);
+              }
+            }
+            const result = listSchedule.map((item: any) => ({
+              start: new Date(moment(item.startTime, 'YYYYMMDDHHmmss') as any),
+              end: new Date(moment(item.endTime, 'YYYYMMDDHHmmss') as any),
+              title: item.className + ' ' + item.description,
+              color: {
+                primary: '#1e90ff',
+                secondary: '#D1E8FF',
+              },
+            }));
             const payload = {
-              start: new Date(this.registerInformation.value.startTime),
               end: new Date(this.registerInformation.value.endTime),
+              start: new Date(this.registerInformation.value.startTime),
               title:
                 this.registerInformation.value.className +
                 ' ' +
                 this.registerInformation.value.description,
+              color: {
+                primary: '#ad2121',
+                secondary: '#FAE3E3',
+              },
             };
-            this.events = [...this.events, payload];
+            this.events = [...result, payload];
           }
         },
         () => {
@@ -220,15 +263,14 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
   }
   addNewChooseChemistry() {
     const newItem = {
-      chemistryName: '',
-      code: '',
+      id: '',
       quantity: 0,
       unit: '',
     };
     this.listSelectChemisrty.push(newItem);
   }
   changeSelectedChemistry(event: any, index: any) {
-    const result = this.listChemistry.find((item: any) => item.code === event);
+    const result = this.listChemistry.find((item: any) => item.id === event);
     if (result) {
       this.listSelectChemisrty[index].unit = result.unit;
     }
@@ -244,26 +286,40 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
     this.listSelectChemisrty.splice(index, 1);
   }
   saveRegisterSchedule() {
-    const payload = {};
-    this.service
-      .post(
-        `${this.REQUEST_URL}/checkDuplicateSchedule?endTime=&startTime=`,
-        ''
-      )
-      .subscribe(
-        (res: HttpResponse<any>) => {
-          if (res.body.CODE === 200) {
-            this.handleSaving();
-          } else {
-            this.checkingDuplicate();
-          }
-        },
-        () => {
-          console.error();
-        }
+    return new Promise((resolve: any, reject: any) => {
+      if (!this.validateForm()) {
+        return;
+      }
+      const startTime = parseInt(
+        moment(this.registerInformation.value.startTime).format(
+          'YYYYMMDDHHmmss'
+        )
       );
+      const endTime = parseInt(
+        moment(this.registerInformation.value.endTime).format('YYYYMMDDHHmmss')
+      );
+      this.service
+        .post(
+          `${this.REQUEST_URL}/checkDuplicateSchedule?endTime=${endTime}&startTime=${startTime}`,
+          ''
+        )
+        .subscribe(
+          (res: any) => {
+            if (res.CODE === 200) {
+              if (!res.RESULT) {
+                this.handleSaving(resolve, reject);
+              } else {
+                this.checkingDuplicate(resolve, reject);
+              }
+            }
+          },
+          () => {
+            console.error();
+          }
+        );
+    });
   }
-  checkingDuplicate() {
+  checkingDuplicate(resolve: any, reject: any) {
     this.modal.create({
       nzTitle: 'Trùng lịch!',
       nzContent:
@@ -273,9 +329,125 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
       nzCancelText: 'Hủy',
       nzOkType: 'primary',
       nzOnOk: () => {
-        this.handleSaving();
+        this.handleSaving(resolve, reject);
       },
     });
   }
-  handleSaving() {}
+  handleSaving(resolve: any, reject: any) {
+    const payload = {
+      chemiscalInfo: this.listSelectChemisrty,
+      ...this.registerInformation.value,
+      datetime: this.registerInformation.value.datetime
+        ? parseInt(
+            moment(this.registerInformation.value.datetime).format('YYYYMMDD')
+          )
+        : 0,
+      startTime: this.registerInformation.value.startTime
+        ? parseInt(
+            moment(this.registerInformation.value.startTime).format(
+              'YYYYMMDDHHmmss'
+            )
+          )
+        : 0,
+      endTime: this.registerInformation.value.endTime
+        ? parseInt(
+            moment(this.registerInformation.value.endTime).format(
+              'YYYYMMDDHHmmss'
+            )
+          )
+        : 0,
+      teacherName: this.infoUser.fullName,
+    };
+    this.isLoading = true;
+    if (!this.isEdit) {
+      this.service
+        .postOption(this.REQUEST_URL, payload, '/createPracticeSchedule')
+        .subscribe(
+          (res: HttpResponse<any>) => {
+            if (res.body.CODE === 200) {
+              resolve(res);
+              this.isLoading = false;
+              this.notify.success(
+                'Thông báo',
+                'Đăng ký phòng thực hành thành công!'
+              );
+              this.#modal.close();
+            } else {
+              resolve(res);
+              this.isLoading = false;
+              this.notify.error('Lỗi', 'Đăng ký phòng thực hành thất bại!');
+            }
+          },
+          () => {
+            reject();
+            console.error();
+            this.isLoading = false;
+            this.notify.error('Lỗi', 'Đăng ký phòng thực hành thất bại!');
+          }
+        );
+    } else {
+      payload.id = this.data.id
+      this.service
+        .put(this.REQUEST_URL, payload, `/updatePracticeSchedule?id=${this.data.id}`)
+        .subscribe(
+          (res: HttpResponse<any>) => {
+            if (res.body.CODE === 200) {
+              resolve(res);
+              this.isLoading = false;
+              this.notify.success(
+                'Thông báo',
+                'Sửa thông tin đăng ký phòng thực hành thành công!'
+              );
+              this.#modal.close();
+            } else {
+              resolve(res);
+              this.isLoading = false;
+              this.notify.error(
+                'Lỗi',
+                'Sửa thông tin đăng ký phòng thực hành thất bại!'
+              );
+            }
+          },
+          () => {
+            reject();
+            console.error();
+            this.isLoading = false;
+            this.notify.error(
+              'Lỗi',
+              'Sửa thông tin đăng ký phòng thực hành thất bại!'
+            );
+          }
+        );
+    }
+  }
+  validateForm() {
+    if (this.registerInformation && this.registerInformation.invalid) {
+      Object.values(this.registerInformation.controls).forEach((control: any) => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+      return false;
+    } else {
+      return true;
+    }
+  }
+  getDateTime(date: number) {
+    const year = parseInt(date.toString().substring(0, 4), 10)
+    const month = parseInt(date.toString().substring(4, 6), 10) - 1;
+    const day = parseInt(date.toString().substring(6, 8), 10);
+    return new Date(year, month, day);
+  }
+  getTimeConvert(time: number) {
+    const dateTime = new Date(
+      parseInt(time.toString().substring(0, 4), 10),
+      parseInt(time.toString().substring(4, 6), 10) - 1,
+      parseInt(time.toString().substring(6, 8), 10),
+      parseInt(time.toString().substring(8, 10), 10),
+      parseInt(time.toString().substring(10, 12), 10),
+      parseInt(time.toString().substring(12, 14), 10)
+    );
+    return dateTime
+  }
 }
