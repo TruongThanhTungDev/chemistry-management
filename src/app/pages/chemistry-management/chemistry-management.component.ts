@@ -85,7 +85,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
     filter.push('orderStatus=in=(1,3)');
     filter.push(`isAdded==true`);
     if (this.barcodeValue) filter.push(`barcode==${this.barcodeValue}`);
-    if (this.chemiscalName) filter.push(`name==*${this.chemiscalName}*`);
+    if (this.chemiscalName) filter.push(`name=="*${this.chemiscalName}*"`);
     return filter.join(';');
   }
   filterAllData() {
