@@ -12,7 +12,7 @@ export class SidebarComponent implements OnInit {
       name: 'Quản lý chất hóa học',
       path: '',
       icon: 'fa-solid fa-flask',
-      permission: ['student', 'admin'],
+      permission: ['student', 'admin', 'teacher'],
     },
     {
       name: 'Nhập hàng',

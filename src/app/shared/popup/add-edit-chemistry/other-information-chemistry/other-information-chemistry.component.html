@@ -6,8 +6,8 @@
           <i class="fa-solid fa-atom mr-1"></i>
           Khối lượng nguyên tử (g/mol)
         </div>
-        <input *ngIf="!isStudent" type="number" nz-input class="w-full custom-input" [(ngModel)]="otherInfo.numberOfMoles">
-        <div *ngIf="isStudent" class="border-b border-b-black">
+        <input *ngIf="isAdmin" type="number" nz-input class="w-full custom-input" [(ngModel)]="otherInfo.numberOfMoles">
+        <div *ngIf="!isAdmin" class="border-b border-b-black">
           {{otherInfo.numberOfMoles}}
         </div>
       </div>
@@ -16,14 +16,14 @@
           <i class="fa-solid fa-atom mr-1"></i>
           Tính chất vật lý
         </div>
-        <angular-editor *ngIf="!isStudent" style="height: 179px;" id="editor1" [config]="editorConfig" [(ngModel)]="otherInfo.physicalProperties"></angular-editor>
-        <div *ngIf="isStudent" [innerHtml]="otherInfo.physicalProperties">
+        <angular-editor *ngIf="isAdmin" style="height: 179px;" id="editor1" [config]="editorConfig" [(ngModel)]="otherInfo.physicalProperties"></angular-editor>
+        <div *ngIf="!isAdmin" [innerHtml]="otherInfo.physicalProperties">
         </div>
       </div>
     </div>
     <div>
       <div class="relative w-full h-400px">
-        <div *ngIf="!isStudent">
+        <div *ngIf="isAdmin">
           <label for="upload-file1" class="cursor-pointer">
             <div *ngIf="!otherInfo.bondStructure" class="w-518px py-180px text-center border-branch border border-dashed">
               <i class="fa-solid fa-camera text-branch text-56px"></i>
@@ -34,7 +34,7 @@
           <input type="file" accept="image/*" class="opacity-0 absolute top-0" id="upload-file1"
             (change)="onImageSelected($event)" />
         </div>
-        <div *ngIf="isStudent">
+        <div *ngIf="!isAdmin">
           <img *ngIf="otherInfo.bondStructure" [src]="otherInfo.bondStructure" alt="Hình ảnh chất hóa học"
             class="w-full h-full" style="object-fit: cover;">
           <img *ngIf="!otherInfo.bondStructure" src="../../../../../assets/image/bang-tuan-hoan-la-gi-1.png"
@@ -50,8 +50,8 @@
         <i class="fa-solid fa-atom mr-1"></i>
         Tính chất Hóa học
       </div>
-      <angular-editor *ngIf="!isStudent" style="height: 179px;" id="editor1" [config]="editorConfig" [(ngModel)]="otherInfo.chemicalProperties"></angular-editor>
-      <div *ngIf="isStudent" [innerHtml]="otherInfo.chemicalProperties">
+      <angular-editor *ngIf="isAdmin" style="height: 179px;" id="editor1" [config]="editorConfig" [(ngModel)]="otherInfo.chemicalProperties"></angular-editor>
+      <div *ngIf="!isAdmin" [innerHtml]="otherInfo.chemicalProperties">
       </div>
     </div>
     <div class="mb-5">
@@ -59,8 +59,8 @@
         <i class="fa-solid fa-atom mr-1"></i>
         Trạng thái tự nhiên
       </div>
-      <angular-editor *ngIf="!isStudent" style="height: 179px;" id="editor1" [config]="editorConfig" [(ngModel)]="otherInfo.naturalStatus"></angular-editor>
-      <div *ngIf="isStudent" [innerHtml]="otherInfo.chemicalProperties">
+      <angular-editor *ngIf="isAdmin" style="height: 179px;" id="editor1" [config]="editorConfig" [(ngModel)]="otherInfo.naturalStatus"></angular-editor>
+      <div *ngIf="!isAdmin" [innerHtml]="otherInfo.chemicalProperties">
       </div>
     </div>
   </div>

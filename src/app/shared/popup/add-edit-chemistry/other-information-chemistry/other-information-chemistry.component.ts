@@ -53,8 +53,8 @@ export class OtherInformationChemistry implements OnInit, AfterViewInit {
   constructor() {
     this.infoUser = JSON.parse(localStorage.getItem('infoUser') as any);
   }
-  get isStudent() {
-    return this.infoUser && this.infoUser.role === 'student';
+  get isAdmin() {
+    return this.infoUser && this.infoUser.role === 'admin'
   }
   ngOnInit(): void {}
   ngAfterViewInit(): void {}
