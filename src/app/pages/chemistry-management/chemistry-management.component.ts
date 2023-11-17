@@ -41,8 +41,8 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
   ) {
     this.infoUser = JSON.parse(localStorage.getItem('infoUser') as any);
   }
-  get isStudent() {
-    return this.infoUser && this.infoUser.role === 'student';
+  get isAdmin() {
+    return this.infoUser && this.infoUser.role === 'admin';
   }
   ngOnInit(): void {
     this.getDataChemistry();
@@ -246,7 +246,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
         favoriteLibrary: 'angular',
         favoriteFramework: 'angular',
       },
-      nzFooter: !this.isStudent ? [
+      nzFooter: this.isAdmin ? [
         {
           label: 'In nhãn Chất',
           type: 'primary',

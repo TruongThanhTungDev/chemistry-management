@@ -14,7 +14,7 @@
               (click)="clearData()"></span>
           </ng-template>
         </div>
-        <div *ngIf="!isStudent">
+        <div *ngIf="isAdmin">
           <button nz-button nzType="primary" (click)="openBarcodeScannerModal()">
             <i class="fa-solid fa-barcode mr-1"></i>
             Quét
@@ -25,7 +25,7 @@
           </button>
         </div>
       </div>
-      <div *ngIf="!isStudent" class="flex items-center justify-end">
+      <div *ngIf="isAdmin" class="flex items-center justify-end">
         <div class="mr-2">
           <button nz-button nz-dropdown [nzDropdownMenu]="menu" class="btn-success">
             <i class="fa-solid fa-plus mr-1"></i>
@@ -50,29 +50,29 @@
         [nzScroll]="{ x: '1200px', y: '400px'}" [nzShowPagination]="false">
         <thead>
           <tr>
-            <th *ngIf="!isStudent" class="min-w-200px">Mã chất</th>
+            <th *ngIf="isAdmin" class="min-w-200px">Mã chất</th>
             <th class="min-w-200px">Tên Hóa học</th>
             <th class="min-w-200px">Danh pháp</th>
             <th class="min-w-200px">Ký hiệu</th>
-            <th *ngIf="!isStudent" class="min-w-200px">Số lượng</th>
-            <th *ngIf="!isStudent" class="min-w-200px">Hạn sử dụng</th>
-            <th *ngIf="!isStudent" class="min-w-250px">Tình trạng lưu trữ</th>
-            <th *ngIf="!isStudent" class="min-w-250px">Tình trạng sử dụng</th>
+            <th *ngIf="isAdmin" class="min-w-200px">Số lượng</th>
+            <th *ngIf="isAdmin" class="min-w-200px">Hạn sử dụng</th>
+            <th *ngIf="isAdmin" class="min-w-250px">Tình trạng lưu trữ</th>
+            <th *ngIf="isAdmin" class="min-w-250px">Tình trạng sử dụng</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of tableChemistry.data" (dblclick)="editChemistry(item)" (click)="selectRow(item)" [class]="rowSelected && item.id === rowSelected.id ? 'bg-branch text-white' : ''">
-            <td *ngIf="!isStudent">{{item.code}}</td>
+            <td *ngIf="isAdmin">{{item.code}}</td>
             <td>{{item.name}}</td>
             <td>{{item.nomenclature}}</td>
             <td>{{item.formula}}</td>
-            <td *ngIf="!isStudent">{{item.quantity + ' ' + (item.unit ? item.unit : '')}}</td>
-            <td *ngIf="!isStudent">{{formatDate(item.expirationDate)}}</td>
-            <td *ngIf="!isStudent">
+            <td *ngIf="isAdmin">{{item.quantity + ' ' + (item.unit ? item.unit : '')}}</td>
+            <td *ngIf="isAdmin">{{formatDate(item.expirationDate)}}</td>
+            <td *ngIf="isAdmin">
               <div *ngIf="item.storageStatus === 'true'" class="px-5 bg-blue-500 text-center text-white rounded">Còn</div>
               <div *ngIf="item.storageStatus === 'false'" class="px-5 bg-red-500 text-center text-white rounded">Hết</div>
             </td>
-            <td *ngIf="!isStudent">
+            <td *ngIf="isAdmin">
               <div *ngIf="item.usingStatus === 'true'" class="px-5 bg-blue-500 text-center text-white rounded">Còn hạn</div>
               <div *ngIf="item.usingStatus === 'false'" class="px-5 bg-red-500 text-center text-white rounded">Hết hạn</div>
             </td>
