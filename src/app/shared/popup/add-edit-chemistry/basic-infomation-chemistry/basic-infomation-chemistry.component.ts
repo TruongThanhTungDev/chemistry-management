@@ -39,8 +39,8 @@ export class BasicInformationChemistry {
       orderAt: ['']
     });
   }
-  get isStudent() {
-    return this.infoUser && this.infoUser.role === 'student'
+  get isAdmin() {
+    return this.infoUser && this.infoUser.role === 'admin'
   }
   changeStorageStatus(type: string) {
     this.basicInformation.patchValue({
