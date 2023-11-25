@@ -1,5 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { el } from 'date-fns/locale';
 import * as moment from 'moment';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { ApiServices } from 'src/app/api.services';
@@ -45,7 +46,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
     return this.infoUser && this.infoUser.role === 'admin';
   }
   ngOnInit(): void {
-    this.getDataChemistry();
+    this.loadData()
     this.dataService.data$.subscribe((data: any) => {
       if (data) {
         this.selectItemByBarcode(data);
@@ -79,12 +80,50 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
       }
     );
   }
+  getDataWithNoAdmin() {
+    const payload = {
+      page: this.page - 1,
+      size: this.itemPerPage,
+      filter: this.filterData(),
+      sort: ['name', 'desc'],
+    };
+    this.isLoading = true;
+    this.service.getOption(this.REQUEST_URL, payload, '/findChemiscalByStudent').subscribe(
+      (res: HttpResponse<any>) => {
+        if (res.body.CODE === 200) {
+          this.isLoading = false;
+          this.listChemistry = res.body.RESULT.map((item: any, index: any) => ({
+            ...item,
+            id: index
+          }))
+          this.totalItems = res.body.RESULT.totalElements;
+        } else {
+          this.isLoading = false;
+          this.notify.error('Lỗi', 'Lấy danh sách thất bại');
+        }
+      },
+      () => {
+        this.isLoading = false;
+        console.error();
+        this.notify.error('Lỗi', 'Lấy danh sách thất bại');
+      }
+    );
+  }
+  loadData() {
+    if (this.isAdmin) {
+      this.getDataChemistry()
+    } else {
+      this.getDataWithNoAdmin()
+    }
+  }
   filterData() {
     const filter = [];
     filter.push('id>0');
-    filter.push('orderStatus=in=(1,3)');
-    filter.push(`isAdded==true`);
-    if (this.barcodeValue) filter.push(`barcode==${this.barcodeValue}`);
+    if (this.isAdmin) {
+      filter.push('orderStatus=in=(1,3)');
+      filter.push(`isAdded==true`);
+      if (this.barcodeValue) filter.push(`barcode==${this.barcodeValue}`);
+    }
     if (this.chemiscalName) filter.push(`name=="*${this.chemiscalName}*"`);
     return filter.join(';');
   }
@@ -127,7 +166,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
             if (res.body.CODE === 200) {
               modalRef.close();
               this.page = 1;
-              this.getDataChemistry();
+              this.loadData();
             }
           },
         },
@@ -289,7 +328,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
   clearData() {
     this.page = 1;
     this.chemiscalName = '';
-    this.getDataChemistry();
+    this.loadData();
   }
   deleteChemistry() {
     this.modal.create({
@@ -364,7 +403,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
   }
   changePage(event: any) {
     this.page = event;
-    this.getDataChemistry();
+    this.loadData();
   }
   openPrintLabel(item: any) {
     const modal: NzModalRef = this.modal.create({

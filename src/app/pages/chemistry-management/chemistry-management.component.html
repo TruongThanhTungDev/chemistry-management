@@ -4,7 +4,7 @@
       <div class="grid grid-cols-2 gap-2">
         <div>
           <nz-input-group [nzPrefix]="suffixIconSearch" [nzSuffix]="inputClearTpl">
-            <input type="text" nz-input placeholder="Tìm kiếm theo tên" [(ngModel)]="chemiscalName" (keyup.enter)="getDataChemistry()"/>
+            <input type="text" nz-input placeholder="Tìm kiếm theo tên" [(ngModel)]="chemiscalName" (keyup.enter)="loadData()"/>
           </nz-input-group>
           <ng-template #suffixIconSearch>
             <span nz-icon nzType="search"></span>
