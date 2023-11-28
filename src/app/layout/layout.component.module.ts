@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
+import { ModuleWithProviders, NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { LayoutRoutes } from "./layout.routing";
 import { FormsModule } from "@angular/forms";
@@ -15,6 +15,7 @@ import { ChemistryManagement } from "../pages/chemistry-management/chemistry-man
 import { ImportChemistry } from "../pages/import-chemistry/import-chemistry.component";
 import { RegisterSchedule } from "../pages/register-schedule/register-schedule.component";
 import { ExcelService } from "../shared/utils/export-excel.service";
+
 @NgModule({
   imports: [
     CommonModule,

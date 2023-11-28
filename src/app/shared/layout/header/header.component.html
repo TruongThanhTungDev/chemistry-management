@@ -1,8 +1,30 @@
 <div class="bg-branch w-full h-100px text-white relative">
   <div class="background-description z-0"></div>
-  <div class="text-36px font-bold h-full">
+  <div class="text-36px font-bold h-full z-1">
     <div class="flex items-center justify-center h-full">
       QUẢN LÝ CHẤT HÓA HỌC
     </div>
   </div>
+  <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" [nzPlacement]="'bottomRight'" class="absolute z-10 notification-container cursor-pointer">
+    <i class="fa-solid fa-bell text-3xl text-white"></i>
+    <a class="rounded-full text-white bg-red-500 p-1.5 text-xs flex items-center justify-center absolute -top-2 -right-4">
+      10
+    </a>
+  </a>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu class="w-350px">
+      <li nz-menu-item class="flex items-center">
+        <i class="fa-regular fa-bell text-red-500 text-sm border border-red-500 px-3 py-2 rounded-full"></i>
+        <div class="ml-2">
+          <div>
+            Bạn có một đơn đăng ký phòng thực hành mới!
+          </div>
+          <small class="font-light">1 phút trước</small>
+        </div>
+        <div class="w-7">
+          <div class="w-2 h-2 rounded-full bg-blue-600"></div>
+        </div>
+      </li>
+    </ul>
+  </nz-dropdown-menu>
 </div>
