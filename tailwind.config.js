@@ -66,6 +66,9 @@ module.exports = {
         "300px": "300px",
         "250px": "250px",
       },
+      maxWidth: {
+        '4/5': "80%"
+      },
       margin: {
         11: "44px",
         12: "48px",
