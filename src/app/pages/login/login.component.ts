@@ -2,6 +2,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiServices } from 'src/app/api.services';
+import { RxStompService } from 'src/app/rx-stomp.service';
 import { NotificationService } from 'src/app/shared/utils/toast.service';
 
 @Component({
@@ -9,17 +10,18 @@ import { NotificationService } from 'src/app/shared/utils/toast.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit{
+export class LoginComponent implements OnInit {
   userName: any;
   password: any;
   isShowPassword = false;
-  isLoading = false
+  isLoading = false;
   REQUEST_URL = 'api/v1/account/login';
   constructor(
     private service: ApiServices,
     private router: Router,
-    private notify: NotificationService
-  ) { }
+    private notify: NotificationService,
+    private rxStompService: RxStompService
+  ) {}
   ngOnInit(): void {
     localStorage.clear();
   }

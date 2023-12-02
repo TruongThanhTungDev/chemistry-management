@@ -20,6 +20,8 @@
     "@angular/router": "^16.0.0",
     "@eisberg-labs/ngx-barcode-scanner": "^6.0.0",
     "@kolkov/angular-editor": "^3.0.0-beta.0",
+    "@stomp/rx-stomp": "^2.0.0",
+    "@stomp/stompjs": "^7.0.0",
     "@syncfusion/ej2-angular-barcode-generator": "^23.1.36",
     "@zxing/ngx-scanner": "^16.1.0",
     "angular-calendar": "^0.31.0",

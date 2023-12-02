@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { env } from "../environment";
+import { RxStompService } from "../rx-stomp.service";
 
 @Component({
   selector: 'app-layout',
@@ -8,22 +9,10 @@ import { env } from "../environment";
 })
 export class LayoutComponent implements OnInit, OnDestroy {
   REQUEST_URL_SOCKET = 'ws';
-  private readonly baseUrl: string = 'ws://localhost:8080/chat';
   socket?: WebSocket;
+  constructor(private rxStompService: RxStompService) {}
   ngOnInit(): void {
-    this.socket = new WebSocket(this.baseUrl);
-
-    this.socket.onopen = (event) => {
-      console.log('open :>> ', event);
-    };
-
-    this.socket.onmessage = (event) => {
-      console.log('mesage :>> ', event);
-    };
-
-    this.socket.onerror = (error) => {
-      console.log('error :>> ', error);
-    };
+    // this.rxStompService.activate()
   }
   ngOnDestroy(): void {}
 }
