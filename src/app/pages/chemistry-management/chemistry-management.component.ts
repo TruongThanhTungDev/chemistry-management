@@ -84,7 +84,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
     const payload = {
       page: this.page - 1,
       size: this.itemPerPage,
-      filter: this.filterData(),
+      filter: this.chemiscalName,
       sort: ['name', 'desc'],
     };
     this.isLoading = true;
