@@ -33,10 +33,7 @@
             ],
             "scripts": [
               "node_modules/quagga/dist/quagga.min.js",
-              "node_modules/html2pdf.js/dist/html2pdf.bundle.min.js",
-              {
-                "input": "src/polyfills.ts"
-              }
+              "node_modules/html2pdf.js/dist/html2pdf.bundle.min.js"
             ]
           },
           "configurations": {

@@ -29,7 +29,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
   isAdded = true;
   itemPerPage = 10;
   totalItems = 0;
-  chemiscalName: any;
+  chemiscalName = '';
   barcodeValue: any;
   infoUser: any;
   constructor(
@@ -84,7 +84,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
     const payload = {
       page: this.page - 1,
       size: this.itemPerPage,
-      filter: this.chemiscalName,
+      filter: this.chemiscalName ? this.chemiscalName : '',
       sort: ['name', 'desc'],
     };
     this.isLoading = true;
@@ -92,11 +92,13 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
       (res: HttpResponse<any>) => {
         if (res.body.CODE === 200) {
           this.isLoading = false;
-          this.listChemistry = res.body.RESULT.map((item: any, index: any) => ({
-            ...item,
-            id: index
-          }))
-          this.totalItems = res.body.RESULT.totalElements;
+          this.listChemistry = res.body.RESULT.chemiscalDto.map(
+            (item: any, index: any) => ({
+              ...item,
+              id: index,
+            })
+          );
+          this.totalItems = res.body.RESULT.totalItem;
         } else {
           this.isLoading = false;
           this.notify.error('Lỗi', 'Lấy danh sách thất bại');

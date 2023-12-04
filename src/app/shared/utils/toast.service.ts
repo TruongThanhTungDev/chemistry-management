@@ -3,8 +3,10 @@ import {NzNotificationService} from 'ng-zorro-antd/notification'
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
   constructor(protected notify: NzNotificationService) {}
-  success(title: any, content: any) {
-    this.notify.success(title, content);
+  success(title: any, content: any, placement = 'topRight') {
+    this.notify.success(title, content, {
+      nzPlacement: placement as any,
+    });
   }
   info(title: any, content: any) {
     this.notify.info(title, content);
@@ -15,5 +17,4 @@ export class NotificationService {
   error(title: any, content: any) {
     this.notify.error(title, content);
   }
-
 }
