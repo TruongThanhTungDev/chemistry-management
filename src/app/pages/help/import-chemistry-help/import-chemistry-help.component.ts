@@ -6,5 +6,5 @@ import { Component } from "@angular/core";
   styleUrls: ['import-chemistry-help.component.scss']
 })
 export class ImportChemistryHelp {
-  
+  array = [1, 2, 3, 4];
 }
