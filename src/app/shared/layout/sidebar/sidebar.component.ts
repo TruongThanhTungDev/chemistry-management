@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { NavigationEnd, Router } from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 
 @Component({
   selector: 'sidebar-component',
@@ -27,15 +27,15 @@ export class SidebarComponent implements OnInit {
       permission: ['teacher', 'admin'],
     },
     {
-      name: 'Chat GPT',
-      path: 'chat-gpt',
-      icon: 'fa-brands fa-rocketchat',
+      name: 'Hỗ trợ kỹ thuật',
+      path: 'help',
+      icon: 'fa-solid fa-circle-info',
       permission: ['student', 'admin', 'teacher'],
     },
   ];
   currentRouter: any;
   infoUser: any;
-  constructor(private router: Router) {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
   ngOnInit(): void {
     this.infoUser = JSON.parse(localStorage.getItem('infoUser') as any);
   }

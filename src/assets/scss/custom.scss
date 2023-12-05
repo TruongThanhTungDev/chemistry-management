@@ -66,3 +66,16 @@ tbody > tr:hover > td {
   color: white!important;
   cursor: pointer;
 }
+.slick-dots {
+  >.ng-star-inserted {
+    background-color: black!important;
+  }
+}
+.slick-active {
+  >.ng-star-inserted {
+    background-color: green!important;
+  }
+}
+.slick-list {
+  height: calc(100vh - 300px)!important;
+}
