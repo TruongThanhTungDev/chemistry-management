@@ -46,7 +46,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
     return this.infoUser && this.infoUser.role === 'admin';
   }
   ngOnInit(): void {
-    this.loadData()
+    this.loadData();
     this.dataService.data$.subscribe((data: any) => {
       if (data) {
         this.selectItemByBarcode(data);
@@ -84,49 +84,50 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
     const payload = {
       page: this.page - 1,
       size: this.itemPerPage,
-      filter: this.chemiscalName ? this.chemiscalName :this.filterData(),
-      sort: ['id', 'desc'],
+      filter: this.chemiscalName ? this.chemiscalName : this.filterData(),
+      sort: ['name', 'desc'],
     };
     this.isLoading = true;
-    this.service.getOption(this.REQUEST_URL, payload, '/findChemiscalByStudent').subscribe(
-      (res: HttpResponse<any>) => {
-        if (res.body.CODE === 200) {
+    this.service
+      .getOption(this.REQUEST_URL, payload, '/findChemiscalByStudent')
+      .subscribe(
+        (res: HttpResponse<any>) => {
+          if (res.body.CODE === 200) {
+            this.isLoading = false;
+            this.listChemistry = res.body.RESULT.chemiscalDto.map(
+              (item: any, index: any) => ({
+                ...item,
+                id: index,
+              })
+            );
+            this.totalItems = res.body.RESULT.totalItem;
+          } else {
+            this.isLoading = false;
+            this.notify.error('Lỗi', 'Lấy danh sách thất bại');
+          }
+        },
+        () => {
           this.isLoading = false;
-          this.listChemistry = res.body.RESULT.chemiscalDto.map(
-            (item: any, index: any) => ({
-              ...item,
-              id: index,
-            })
-          );
-          this.totalItems = res.body.RESULT.totalItem;
-        } else {
-          this.isLoading = false;
+          console.error();
           this.notify.error('Lỗi', 'Lấy danh sách thất bại');
         }
-      },
-      () => {
-        this.isLoading = false;
-        console.error();
-        this.notify.error('Lỗi', 'Lấy danh sách thất bại');
-      }
-    );
+      );
   }
   loadData() {
     if (this.isAdmin) {
-      this.getDataChemistry()
+      this.getDataChemistry();
     } else {
-      this.getDataWithNoAdmin()
+      this.getDataWithNoAdmin();
     }
   }
   filterData() {
     const filter = [];
-    filter.push('id>0');
     if (this.isAdmin) {
+      filter.push('id>0');
       filter.push('orderStatus=in=(1,3)');
       filter.push(`isAdded==true`);
       if (this.barcodeValue) filter.push(`barcode==${this.barcodeValue}`);
     }
-    if (this.chemiscalName) filter.push(`name=="*${this.chemiscalName}*"`);
     return filter.join(';');
   }
   filterAllData() {
@@ -287,32 +288,34 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
         favoriteLibrary: 'angular',
         favoriteFramework: 'angular',
       },
-      nzFooter: this.isAdmin ? [
-        {
-          label: 'In nhãn Chất',
-          type: 'primary',
-          onClick: () => this.openPrintLabel(item),
-        },
-        {
-          label: 'Hủy',
-          onClick: () => modalRef.destroy(),
-        },
-        {
-          label: 'Lưu',
-          type: 'primary',
-          autoLoading: false,
-          onClick: async () => {
-            const ref =
-              modalRef.getContentComponent() as AddEditChemistryComponent;
-            const res = (await ref.saveInformation()) as HttpResponse<any>;
-            if (res.body.CODE === 200) {
-              modalRef.close();
-              this.page = 1;
-              this.getDataChemistry();
-            }
-          },
-        },
-      ] : [],
+      nzFooter: this.isAdmin
+        ? [
+            {
+              label: 'In nhãn Chất',
+              type: 'primary',
+              onClick: () => this.openPrintLabel(item),
+            },
+            {
+              label: 'Hủy',
+              onClick: () => modalRef.destroy(),
+            },
+            {
+              label: 'Lưu',
+              type: 'primary',
+              autoLoading: false,
+              onClick: async () => {
+                const ref =
+                  modalRef.getContentComponent() as AddEditChemistryComponent;
+                const res = (await ref.saveInformation()) as HttpResponse<any>;
+                if (res.body.CODE === 200) {
+                  modalRef.close();
+                  this.page = 1;
+                  this.getDataChemistry();
+                }
+              },
+            },
+          ]
+        : [],
     });
     modalRef.componentInstance.data = item;
     modalRef.componentInstance.isEdit = true;
