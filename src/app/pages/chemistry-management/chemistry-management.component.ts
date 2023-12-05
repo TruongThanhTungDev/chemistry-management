@@ -85,7 +85,7 @@ export class ChemistryManagement implements OnInit, AfterViewInit {
       page: this.page - 1,
       size: this.itemPerPage,
       filter: this.chemiscalName ? this.chemiscalName :this.filterData(),
-      sort: ['name', 'desc'],
+      sort: ['id', 'desc'],
     };
     this.isLoading = true;
     this.service.getOption(this.REQUEST_URL, payload, '/findChemiscalByStudent').subscribe(

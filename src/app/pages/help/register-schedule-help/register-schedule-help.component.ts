@@ -6,5 +6,5 @@ import { Component } from "@angular/core";
   styleUrls: ['register-schedule-help.component.scss']
 })
 export class RegisterScheduleHelp {
-  
+  array = [1, 2, 3, 4];
 }
