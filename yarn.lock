@@ -1424,6 +1424,20 @@
   resolved "https://registry.npmjs.org/@mattlewis92/dom-autoscroller/-/dom-autoscroller-2.4.2.tgz"
   integrity sha512-YbrUWREPGEjE/FU6foXcAT1YbVwqD/jkYnY1dFb0o4AxtP3s4xKBthlELjndZih8uwsDWgQZx1eNskRNe2BgZQ==
 
+"@ngrx/store-devtools@^16.2.0":
+  version "16.3.0"
+  resolved "https://registry.npmjs.org/@ngrx/store-devtools/-/store-devtools-16.3.0.tgz"
+  integrity sha512-Ou/aXxJmd9UgYliL09hmnlLdk35dJ8S56rJCHgeJlMPb8j0LDR7Olfpsa7Asi63Zvtg2MYZn1p1G0Tsb+0rk/Q==
+  dependencies:
+    tslib "^2.0.0"
+
+"@ngrx/store@^16.2.0", "@ngrx/store@16.3.0":
+  version "16.3.0"
+  resolved "https://registry.npmjs.org/@ngrx/store/-/store-16.3.0.tgz"
+  integrity sha512-aWQY41M7O0sMpTmM+OOPBPwKQWHhmkCStizFB1GdiGud8DU5fz0BdUiy6o2+feZypMzczqbwTnq+AxxxrWYqoA==
+  dependencies:
+    tslib "^2.0.0"
+
 "@ngtools/webpack@16.2.4":
   version "16.2.4"
   resolved "https://registry.npmjs.org/@ngtools/webpack/-/webpack-16.2.4.tgz"
@@ -6631,7 +6645,7 @@ rxjs-compat@^6.5.4:
   resolved "https://registry.npmjs.org/rxjs-compat/-/rxjs-compat-6.6.7.tgz"
   integrity sha512-szN4fK+TqBPOFBcBcsR0g2cmTTUF/vaFEOZNuSdfU8/pGFnNmmn2u8SystYXG1QMrjOPBc6XTKHMVfENDf6hHw==
 
-"rxjs@^6.4.0 || ^7.4.0", "rxjs@^6.5.3 || ^7.4.0", "rxjs@^6.6.3 || ^7.0.0", rxjs@^7.2.0, rxjs@^7.5.5, rxjs@~7.8.0, rxjs@7.8.1:
+"rxjs@^6.4.0 || ^7.4.0", "rxjs@^6.5.3 || ^7.4.0", "rxjs@^6.5.3 || ^7.5.0", "rxjs@^6.6.3 || ^7.0.0", rxjs@^7.2.0, rxjs@^7.5.5, rxjs@~7.8.0, rxjs@7.8.1:
   version "7.8.1"
   resolved "https://registry.npmjs.org/rxjs/-/rxjs-7.8.1.tgz"
   integrity sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==
