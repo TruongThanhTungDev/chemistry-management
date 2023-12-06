@@ -6,6 +6,7 @@ import { NotificationService } from 'src/app/shared/utils/toast.service';
 import { HttpResponse } from '@angular/common/http';
 import { RegisterSchedulePopup } from 'src/app/shared/popup/register-schedule-popup/register-schedule-popup.component';
 import { RejectRegisterSchedule } from 'src/app/shared/popup/reject-register-schedule/reject-register-schedule.component';
+import { Store } from '@ngrx/store';
 @Component({
   selector: 'practice-register',
   templateUrl: './register-schedule.component.html',
@@ -16,7 +17,8 @@ export class RegisterSchedule implements OnInit {
     private service: ApiServices,
     private notify: NotificationService,
     private modal: NzModalService,
-    private viewContainerRef: ViewContainerRef
+    private viewContainerRef: ViewContainerRef,
+    private store: Store<any>
   ) {
     this.infoUser = JSON.parse(localStorage.getItem('infoUser') as any);
   }
@@ -34,9 +36,38 @@ export class RegisterSchedule implements OnInit {
   size = 10;
   ngOnInit() {
     this.getListRegisterSchedule();
+    this.store.subscribe((state) => { 
+      if (state.common.isViewSchedule) {
+        this.getScheduleItem(state.common.practiceScheduleId);
+      }
+    })
   }
   get isAdmin() {
-    return this.infoUser && this.infoUser.role === 'admin'
+    return this.infoUser && this.infoUser.role === 'admin';
+  }
+  getScheduleItem(id: any) {
+    this.getAllSchedule(id)
+  }
+  getAllSchedule(id: any) {
+    console.log('id :>> ', id);
+    this.service.get(this.REQUEST_URL + '/getAll').subscribe(
+      (res: HttpResponse<any>) => {
+        const schedule = res.body.RESULT.find((item: any) => item.id === id)
+        if (schedule) {
+          this.openEditRegisterSchedule(schedule)
+          this.store.dispatch({
+            type: 'SET_IS_VIEW_SCHEDULE',
+            state: null,
+            isViewSchedule: false,
+          });
+        } else {
+          this.notify.error(
+            'Lỗi',
+            'Không tìm thấy lịch đăng ký tương ứng'
+          );
+        }
+      }
+    )
   }
   getListRegisterSchedule() {
     const payload = {
@@ -74,8 +105,8 @@ export class RegisterSchedule implements OnInit {
     return filter.join(';');
   }
   filterDate(event: any) {
-    this.page = 1
-    this.getListRegisterSchedule()
+    this.page = 1;
+    this.getListRegisterSchedule();
   }
   selectRow(item: any) {
     if (this.rowSelected && this.rowSelected.id === item.id) {
@@ -187,9 +218,10 @@ export class RegisterSchedule implements OnInit {
               type: 'primary',
               autoLoading: false,
               onClick: () => {
-                const ref = modalRef.getContentComponent() as RegisterSchedulePopup
-                this.rowSelected = ref.data
-                this.acceptRegisterSchedule()
+                const ref =
+                  modalRef.getContentComponent() as RegisterSchedulePopup;
+                this.rowSelected = ref.data;
+                this.acceptRegisterSchedule();
               },
             },
           ],
@@ -230,7 +262,7 @@ export class RegisterSchedule implements OnInit {
                   ? 'Duyệt lịch thực hành thành công!'
                   : 'Đã từ chối lịch thực hành!'
               );
-              this.rowSelected = null
+              this.rowSelected = null;
               this.getListRegisterSchedule();
             } else {
               this.isLoading = false;
@@ -284,7 +316,7 @@ export class RegisterSchedule implements OnInit {
             )) as HttpResponse<any>;
             if (res.body.CODE === 200) {
               modalRef.destroy();
-              this.rowSelected = null
+              this.rowSelected = null;
             }
           },
         },

@@ -46,6 +46,9 @@ import { AddMultipleChemistryByFile } from './shared/popup/add-multiple-chemistr
 import { RejectRegisterSchedule } from './shared/popup/reject-register-schedule/reject-register-schedule.component';
 import { RxStompService } from './rx-stomp.service';
 import { rxStompServiceFactory } from './rx-stomp-service-factory';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { commonReducer } from './shared/store/common/common.reducers';
 registerLocaleData(vi)
 
 @NgModule({
@@ -62,7 +65,7 @@ registerLocaleData(vi)
     PrintLablePopup,
     RegisterSchedulePopup,
     AddMultipleChemistryByFile,
-    RejectRegisterSchedule
+    RejectRegisterSchedule,
   ],
   imports: [
     FormsModule,
@@ -91,7 +94,14 @@ registerLocaleData(vi)
     NzTimePickerModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
-      useFactory: adapterFactory
+      useFactory: adapterFactory,
+    }),
+    StoreModule.forRoot({
+      common: commonReducer,
+    }),
+    StoreModule.forFeature('common', commonReducer),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
     }),
   ],
   providers: [
@@ -100,8 +110,8 @@ registerLocaleData(vi)
     DataService,
     {
       provide: RxStompService,
-      useFactory: rxStompServiceFactory
-    }
+      useFactory: rxStompServiceFactory,
+    },
   ],
   bootstrap: [AppComponent],
 })

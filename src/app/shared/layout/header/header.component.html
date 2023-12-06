@@ -13,7 +13,7 @@
   </a>
   <nz-dropdown-menu #menu="nzDropdownMenu">
     <ul nz-menu class="w-350px" (nzClick)="getListNotify()">
-      <li nz-menu-item class="flex items-center" *ngFor="let notify of listNotificaion" (click)="changeNotify(notify.id)">
+      <li nz-menu-item class="flex items-center" *ngFor="let notify of listNotificaion" (click)="changeNotify(notify.id, notify.practiceSchelduleId)">
         <i class="fa-regular fa-bell text-red-500 text-sm border border-red-500 px-3 py-2 rounded-full"></i>
         <div class="ml-2">
           <div [innerHTML]="notify.message">
