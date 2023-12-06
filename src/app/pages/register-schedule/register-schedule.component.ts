@@ -38,6 +38,11 @@ export class RegisterSchedule implements OnInit {
     this.getListRegisterSchedule();
     this.store.subscribe((state) => { 
       if (state.common.isViewSchedule) {
+        this.store.dispatch({
+          type: 'SET_IS_VIEW_SCHEDULE',
+          state: null,
+          isViewSchedule: false,
+        });
         this.getScheduleItem(state.common.practiceScheduleId);
       }
     })
@@ -55,11 +60,6 @@ export class RegisterSchedule implements OnInit {
         const schedule = res.body.RESULT.find((item: any) => item.id === id)
         if (schedule) {
           this.openEditRegisterSchedule(schedule)
-          this.store.dispatch({
-            type: 'SET_IS_VIEW_SCHEDULE',
-            state: null,
-            isViewSchedule: false,
-          });
         } else {
           this.notify.error(
             'Lỗi',
