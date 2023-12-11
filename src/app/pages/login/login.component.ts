@@ -2,7 +2,6 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiServices } from 'src/app/api.services';
-import { RxStompService } from 'src/app/rx-stomp.service';
 import { NotificationService } from 'src/app/shared/utils/toast.service';
 
 @Component({
@@ -20,7 +19,6 @@ export class LoginComponent implements OnInit {
     private service: ApiServices,
     private router: Router,
     private notify: NotificationService,
-    private rxStompService: RxStompService
   ) {}
   ngOnInit(): void {
     localStorage.clear();

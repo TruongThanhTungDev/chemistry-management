@@ -44,8 +44,6 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { AddMultipleChemistryByFile } from './shared/popup/add-multiple-chemistry-by-file/add-multiple-chemistry-by-file.component';
 import { RejectRegisterSchedule } from './shared/popup/reject-register-schedule/reject-register-schedule.component';
-import { RxStompService } from './rx-stomp.service';
-import { rxStompServiceFactory } from './rx-stomp-service-factory';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { commonReducer } from './shared/store/common/common.reducers';
@@ -108,10 +106,6 @@ registerLocaleData(vi)
     { provide: HTTP_INTERCEPTORS, useClass: HeadersInterceptor, multi: true },
     { provide: NZ_I18N, useValue: vi_VN },
     DataService,
-    {
-      provide: RxStompService,
-      useFactory: rxStompServiceFactory,
-    },
   ],
   bootstrap: [AppComponent],
 })
