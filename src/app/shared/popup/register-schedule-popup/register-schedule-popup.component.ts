@@ -108,6 +108,7 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
     return this.infoUser && this.infoUser.role === 'admin';
   }
   changeStartTime(event: any) {
+    this.events = [...this.events];
     this.events.pop();
     const payload = {
       start: new Date(event),
@@ -124,6 +125,7 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
     this.events = [...this.events, payload];
   }
   changeEndTime(event: any) {
+    this.events = [...this.events];
     this.events.pop();
     const payload = {
       start: new Date(this.registerInformation.value.startTime),
@@ -140,18 +142,20 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
     this.events = [...this.events, payload];
   }
   onCalendarChange(event: any) {
+    this.events = [...this.events];
     this.events.pop();
     this.registerInformation.patchValue({
       startTime: new Date(event).setHours(0, 0, 0),
       endTime: new Date(event).setHours(1, 0, 0),
     });
+    console.log('object :>> ', this.registerInformation);
     this.getCalendarOfDay(event);
   }
   showDateInCalendar() {
     this.events.pop();
     const payload = {
-      start: new Date(this.registerInformation.value.startTime),
       end: new Date(this.registerInformation.value.endTime),
+      start: new Date(this.registerInformation.value.startTime),
       title:
         this.registerInformation.value.className +
         ' ' +
@@ -182,8 +186,8 @@ export class RegisterSchedulePopup implements OnInit, AfterViewInit {
               }
             }
             const result = listSchedule.map((item: any) => ({
-              start: new Date(moment(item.startTime, 'YYYYMMDDHHmmss') as any),
               end: new Date(moment(item.endTime, 'YYYYMMDDHHmmss') as any),
+              start: new Date(moment(item.startTime, 'YYYYMMDDHHmmss') as any),
               title: item.className + ' ' + item.description,
               color: {
                 primary: '#1e90ff',

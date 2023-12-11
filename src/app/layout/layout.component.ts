@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { env } from "../environment";
-import { RxStompService } from "../rx-stomp.service";
 
 @Component({
   selector: 'app-layout',
